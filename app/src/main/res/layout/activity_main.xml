@@ -128,12 +128,13 @@
                     app:srcCompat="@drawable/vk" />
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/tvRegistarton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="15dp"
                     android:layout_weight="1"
+                    android:onClick="registration"
                     android:text="Регистрация"
                     android:textColor="@color/colorOrange"
                     android:textSize="14sp"
