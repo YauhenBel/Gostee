@@ -5,7 +5,18 @@
     <string name="item2">Item2</string>
     <string name="item3">Item3</string>
     <string name="item4">Item4</string>
-    <string name="registration_info">Для того чтобы начать пользоваться приложением заполните все
-        поля ниже и нажмите кнопку «Зарегистрироваться»</string>
+    <string name="registration_info">Для того чтобы начать пользоваться</string>
+    <string name="registration_info1">приложением заполните все поля ниже</string>
+    <string name="registration_info2">и нажмите кнопку «Зарегистрироваться»</string>
+    <string name="TextButtonReg">ЗАРЕГИСТРИРОВАТЬСЯ</string>
+    <string name="textContact">Email или Номер телефона</string>
+    <string name="textPassword">Придумайте пароль</string>
+    <string name="textName">Как Вас зовут?</string>
+    <string name="textAuthorization">АВТОРИЗАЦИЯ</string>
+    <string name="textRememberPassword">Забыли пароль?</string>
+    <string name="textReg">Регистрация</string>
+    <string name="todo">TODO</string>
+    <string name="textInput">ВОЙТИ</string>
+    <string name="todo1">TODO</string>
 
 </resources>

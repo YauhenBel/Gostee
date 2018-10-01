@@ -3,53 +3,100 @@ package com.example.genia.gostee;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.concurrent.ExecutionException;
 
 public class ConnToDB {
-    private String mLogin, mPassword;
 
-    public Boolean makeQuery(String _login, String _password){
-        mLogin = _login;
-        mPassword = _password;
-        ConnectDB connectDB = new ConnectDB();
-        connectDB.execute();
-        try {
-            return connectDB.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-
-        return false;
-
-    }
-
-    private class ConnectDB extends AsyncTask<Object, Object, Boolean>
-    {
+    public Boolean authorization(String mLogin, String mPassword){
+        ConnectDB connectDB = null;
         String ansver;
-        JSONArray ja;
-        HttpURLConnection conn;
-        String server_name = "http://r2551241.beget.tech";
-
-        @Override
-        protected Boolean doInBackground(Object... voids) {
-            try {
-                String input = server_name
+        try {
+            String server_name = "http://r2551241.beget.tech";
+            String input = server_name
                     + "/gostee.php?action=input&login="
                     + URLEncoder.encode(mLogin, "UTF-8")
                     +"&password="
                     +URLEncoder.encode(mPassword, "UTF-8");
+            connectDB = new ConnectDB(input);
+            connectDB.execute();
+            ansver =  connectDB.get();
+            if (ansver != null && !ansver.isEmpty()) {
+                Log.i("ConnDB",
+                        "+ Connect ---------- reply contains JSON:" + ansver);
+                try {
+                    ansver = ansver.substring(ansver.indexOf("{"), ansver.indexOf("}") + 1);
+                    JSONObject jo = new JSONObject(ansver);
+
+                    Log.i("chat","=================>>> "
+                                    + jo.getString("login") + " "
+                                    + jo.getString("password"));
+                    return true;
+                }
+                catch (Exception e) {
+                    Log.i("chat",
+                            "+ ConnDB ---------- server response error:\n"
+                                    + e.getMessage());
+                }
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public Boolean registration (String contact, String password, String name){
+        ConnectDB connectDB = null;
+        String ansver;
+        try {
+            String server_name = "http://r2551241.beget.tech";
+            String input = server_name
+                    + "/gostee.php?action=reg&login="
+                    + URLEncoder.encode(contact, "UTF-8")
+                    +"&password="
+                    +URLEncoder.encode(password, "UTF-8")
+                    +"&name="
+                    +URLEncoder.encode(name, "UTF-8");
+            connectDB = new ConnectDB(input);
+            connectDB.execute();
+            ansver =  connectDB.get();
+            if (ansver != null && !ansver.isEmpty()) {
+                Log.i("ConnDB",
+                        "+ Connect ---------- reply contains JSON:" + ansver);
+                return true;
+            }
+        } catch (InterruptedException | ExecutionException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+    private class ConnectDB extends AsyncTask<Object, Object, String>
+    {
+        String input;
+        ConnectDB(String _input){
+            input = _input;
+        }
+        String ansver;
+        HttpURLConnection conn;
+        
+
+        @Override
+        protected String doInBackground(Object... voids) {
+            try {
 
 
                 Log.i("chat",
@@ -97,29 +144,7 @@ public class ConnToDB {
             finally {
                 conn.disconnect();
             }
-            // запишем ответ в БД ---------------------------------->
-            if (ansver != null && !ansver.trim().equals("")) {
-                Log.i("ConnDB",
-                        "+ Connect ---------- reply contains JSON:" + ansver);
-                try {
-                        ansver = ansver.substring(ansver.indexOf("{"), ansver.indexOf("}") + 1);
-                        Log.i("ConnDB",
-                                "+ Connect ---------- reply contains JSON:" + ansver);
-                        JSONObject jo = new JSONObject(ansver);
-
-                        Log.i("chat",
-                                "=================>>> "
-                                        + jo.getString("login")
-                                        + jo.getString("password"));
-                        return true;
-                }
-                catch (Exception e) {
-                    Log.i("chat",
-                            "+ ConnDB ---------- server response error:\n"
-                                    + e.getMessage());
-                }
-            }
-            return false;
+            return ansver;
 
         }
     }

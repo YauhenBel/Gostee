@@ -17,20 +17,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="fitXY"
-            app:srcCompat="@drawable/figure" />
+            app:srcCompat="@drawable/figure"
+            android:contentDescription="@string/todo" />
 
         <ImageView
             android:id="@+id/imageView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            app:srcCompat="@drawable/logo" />
+            app:srcCompat="@drawable/logo"
+            tools:ignore="ContentDescription" />
 
     </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1">
 
         <LinearLayout
@@ -43,7 +45,7 @@
                 android:id="@+id/textView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="АВТОРИЗАЦИЯ"
+                android:text="@string/textAuthorization"
                 android:textAlignment="center"
                 android:textColor="@color/colorOrange"
                 android:textSize="24sp"
@@ -58,10 +60,11 @@
                 android:layout_marginRight="45dp"
                 android:layout_marginTop="10dp"
                 android:backgroundTint="@color/colorOrange"
-                android:drawableLeft="@drawable/password"
+                android:drawableStart="@drawable/password"
                 android:ems="10"
                 android:inputType="textPassword"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                tools:ignore="LabelFor" />
 
             <EditText
                 android:id="@+id/etLogin"
@@ -73,11 +76,12 @@
                 android:layout_marginTop="20dp"
                 android:backgroundTint="@color/colorOrange"
                 android:backgroundTintMode="src_in"
-                android:drawableLeft="@drawable/humanicons"
+                android:drawableStart="@drawable/humanicons"
                 android:ems="10"
                 android:inputType="textPersonName"
                 android:singleLine="false"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                tools:ignore="LabelFor" />
 
             <Button
                 android:id="@+id/btnLogIn"
@@ -89,8 +93,7 @@
                 android:layout_marginRight="45dp"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/button_states"
-                android:onClick="LogIn"
-                android:text="ВОЙТИ"
+                android:text="@string/textInput"
                 android:textColor="@android:color/white"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -115,7 +118,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginRight="5dp"
+                android:layout_marginEnd="5dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -125,7 +128,8 @@
                     android:layout_height="60dp"
                     android:layout_weight="1"
                     android:background="@drawable/any_buttons"
-                    app:srcCompat="@drawable/vk" />
+                    app:srcCompat="@drawable/vk"
+                    tools:ignore="ContentDescription,NestedWeights" />
 
                 <TextView
                     android:id="@+id/tvRegistarton"
@@ -134,8 +138,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="15dp"
                     android:layout_weight="1"
-                    android:onClick="registration"
-                    android:text="Регистрация"
+                    android:text="@string/textReg"
                     android:textColor="@color/colorOrange"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -145,7 +148,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="bottom"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -155,7 +158,9 @@
                     android:layout_height="60dp"
                     android:layout_weight="1"
                     android:background="@drawable/any_buttons"
-                    app:srcCompat="@drawable/google" />
+                    app:srcCompat="@drawable/google"
+                    tools:ignore="NestedWeights"
+                    android:contentDescription="@string/todo1" />
 
                 <TextView
                     android:id="@+id/textView4"
@@ -164,7 +169,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="15dp"
                     android:layout_weight="1"
-                    android:text="Забыли пароль?"
+                    android:text="@string/textRememberPassword"
                     android:textColor="@color/colorOrange"
                     android:textSize="14sp"
                     android:textStyle="bold" />

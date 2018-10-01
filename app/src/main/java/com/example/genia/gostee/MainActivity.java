@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.i("MainActivity", "Authorization1");
                             btnLogIn.setEnabled(false);
                             ConnToDB connToDB = new ConnToDB();
-                            if (connToDB.makeQuery(etLogin.getText().toString(),
+                            if (connToDB.authorization(etLogin.getText().toString(),
                                     etPassword.getText().toString())) {
                                 goToNewLayout();
                                 btnLogIn.setEnabled(true);
