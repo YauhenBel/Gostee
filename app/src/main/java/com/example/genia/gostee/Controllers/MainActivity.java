@@ -1,4 +1,4 @@
-package com.example.genia.gostee;
+package com.example.genia.gostee.Controllers;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.genia.gostee.ConnectToDB.ConnToDB;
+import com.example.genia.gostee.R;
 
 public class MainActivity extends AppCompatActivity {
     Button btnLogIn;
@@ -54,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                                 && etPassword.getText().toString().isEmpty()) {
                             Log.i("MainActivity", "Authorization2");
                             Toast.makeText(getApplicationContext(),
-                                    "Заполните поля.", Toast.LENGTH_SHORT)
+                                    "Заполните все поля.", Toast.LENGTH_SHORT)
                                     .show();
 
                         }else if (etLogin.getText().toString().isEmpty()) {
@@ -84,8 +87,6 @@ public class MainActivity extends AppCompatActivity {
         btnLogIn.setOnClickListener(onClickListener);
         tvRegistration.setOnClickListener(onClickListener);
     }
-
-
 
 
     /*public void LogIn(View view) {

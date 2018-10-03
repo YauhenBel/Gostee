@@ -1,7 +1,13 @@
-package com.example.genia.gostee;
+package com.example.genia.gostee.ConnectToDB;
 
 import android.os.AsyncTask;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.util.Base64;
 import android.util.Log;
+
+import com.example.genia.gostee.Controllers.Registration;
+
 
 import org.json.JSONObject;
 
@@ -23,9 +29,7 @@ public class ConnToDB {
             String server_name = "http://r2551241.beget.tech";
             String input = server_name
                     + "/gostee.php?action=input&login="
-                    + URLEncoder.encode(mLogin, "UTF-8")
-                    +"&password="
-                    +URLEncoder.encode(mPassword, "UTF-8");
+                    + URLEncoder.encode(mLogin, "UTF-8");
             connectDB = new ConnectDB(input);
             connectDB.execute();
             ansver =  connectDB.get();
@@ -47,19 +51,20 @@ public class ConnToDB {
                                     + e.getMessage());
                 }
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
+        } catch (InterruptedException | ExecutionException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         return false;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public Boolean registration (String contact, String password, String name){
+        Log.i("ConnDB",
+                "registration - регистрируемся в базе");
         ConnectDB connectDB = null;
         String ansver;
+        Log.i("ConnDB",
+                "Пароль в базу: " + password);
         try {
             String server_name = "http://r2551241.beget.tech";
             String input = server_name
@@ -83,6 +88,31 @@ public class ConnToDB {
         return false;
     }
 
+    public Boolean checkData (String contact){
+        ConnectDB connectDB = null;
+        String ansver;
+        try {
+            String server_name = "http://r2551241.beget.tech";
+            String input = server_name
+                    + "/gostee.php?action=check&login="
+                    + URLEncoder.encode(contact, "UTF-8");
+            connectDB = new ConnectDB(input);
+            connectDB.execute();
+            ansver =  connectDB.get();
+            if (ansver != null && !ansver.isEmpty()) {
+                Log.i("ConnDB",
+                        "+ Connect ---------- reply contains JSON:" + ansver);
+                if (ansver.equals("0")) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } catch (InterruptedException | ExecutionException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     private class ConnectDB extends AsyncTask<Object, Object, String>
     {
@@ -128,7 +158,7 @@ public class ConnToDB {
                 while ((bfr_st = br.readLine()) != null) {
                     sb.append(bfr_st);
                 }
-                Log.i("chat", "+ FoneService - Full answer from server:\n"
+                Log.i("chat", "+ FoneService - Full answer from server: "
                         + sb.toString());
                 ansver = sb.toString();
                 ansver = ansver.substring(ansver.indexOf("["), ansver.indexOf("]") + 1);
