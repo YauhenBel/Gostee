@@ -42,6 +42,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="MissingConstraints,NotSibling" />
+
             <TextView
                 android:id="@+id/textView8"
                 android:layout_width="wrap_content"

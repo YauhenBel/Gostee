@@ -9,6 +9,7 @@ import android.util.Log;
 import com.example.genia.gostee.Controllers.Registration;
 
 
+import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -23,8 +24,10 @@ import java.util.concurrent.ExecutionException;
 public class ConnToDB {
 
     public Boolean authorization(String mLogin, String mPassword){
+
         ConnectDB connectDB = null;
         String ansver;
+
         try {
             String server_name = "http://r2551241.beget.tech";
             String input = server_name
@@ -43,7 +46,15 @@ public class ConnToDB {
                     Log.i("chat","=================>>> "
                                     + jo.getString("login") + " "
                                     + jo.getString("password"));
-                    return true;
+                    StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
+                    if (passwordEncryptor.checkPassword(mPassword, jo.getString("password"))){
+                        Log.i("Registration", "Пароли совпадают.");
+                        return true;
+                    }else{
+                        Log.i("Registration", "Пароли не совпадают.");
+                        return false;
+                    }
+
                 }
                 catch (Exception e) {
                     Log.i("chat",
@@ -65,18 +76,21 @@ public class ConnToDB {
         String ansver;
         Log.i("ConnDB",
                 "Пароль в базу: " + password);
+        StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
+        String encryptedPassword = passwordEncryptor.encryptPassword(password);
         try {
             String server_name = "http://r2551241.beget.tech";
             String input = server_name
                     + "/gostee.php?action=reg&login="
                     + URLEncoder.encode(contact, "UTF-8")
                     +"&password="
-                    +URLEncoder.encode(password, "UTF-8")
+                    +URLEncoder.encode(encryptedPassword, "UTF-8")
                     +"&name="
                     +URLEncoder.encode(name, "UTF-8");
             connectDB = new ConnectDB(input);
             connectDB.execute();
             ansver =  connectDB.get();
+
             if (ansver != null && !ansver.isEmpty()) {
                 Log.i("ConnDB",
                         "+ Connect ---------- reply contains JSON:" + ansver);

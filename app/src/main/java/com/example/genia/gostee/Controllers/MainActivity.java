@@ -1,6 +1,7 @@
 package com.example.genia.gostee.Controllers;
 
 import android.content.Intent;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +9,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
     Button btnLogIn;
     EditText etLogin, etPassword;
     TextView tvRegistration;
+    ImageView logo;
+    LinearLayout block;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +33,13 @@ public class MainActivity extends AppCompatActivity {
         etLogin = (EditText) findViewById(R.id.etLogin);
         etPassword = (EditText) findViewById(R.id.etPassword);
         tvRegistration = (TextView) findViewById(R.id.tvRegistarton);
+        logo = (ImageView) findViewById(R.id.logo);
+        block = (LinearLayout) findViewById(R.id.block2);
+
+        etLogin.setCursorVisible(false);
+        etPassword.setCursorVisible(false);
+
+
 
         OnClickListener onClickListener = new OnClickListener() {
             @Override

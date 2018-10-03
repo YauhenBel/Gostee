@@ -18,6 +18,8 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 
+import org.jasypt.util.password.StrongPasswordEncryptor;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,6 +41,10 @@ public class Registration extends AppCompatActivity {
         edContact = (EditText) findViewById(R.id.edContact);
         edPassword = (EditText) findViewById(R.id.edPassword);
         edName = (EditText) findViewById(R.id.edName);
+        final ConnToDB connToDB = new ConnToDB();
+        final String[] contact = {""};
+        final String[] password = {""};
+        final String[] name = {""};
 
         OnClickListener onClickListener = new OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -46,39 +52,55 @@ public class Registration extends AppCompatActivity {
             public void onClick(View view) {
               switch (view.getId()){
                   case R.id.btnRegistration:
-                      String contact = edContact.getText().toString();
-                      String password = edPassword.getText().toString();
-                      String name = edName.getText().toString();
-                      if (!contact.isEmpty() && !password.isEmpty() && !name.isEmpty()){
-                          if (isEmailValid(contact) || isPhoneNumberValid(contact)){
-                              ConnToDB connToDB = new ConnToDB();
-                              if (connToDB.checkData(contact)){
-                                  Log.i("Registration", "Логин оригинальный");
-                                  connToDB.registration(contact, password, name);
-                              }else {
-                                  Log.i("Registration", "Пользователь с таким логином уже есть");
-                                  Toast.makeText(getApplicationContext(),
-                                          "Пользователь с таким логином уже существует", Toast.LENGTH_LONG)
-                                          .show();
-                              }
+                      contact[0] = edContact.getText().toString();
+                      password[0] = edPassword.getText().toString();
+                      name[0] = edName.getText().toString();
+                      if (contact[0].isEmpty() || password[0].isEmpty() || name[0].isEmpty()){
 
-                          }else {
-                              Toast.makeText(getApplicationContext(),
-                                      "Введите корректный email или номер телефона", Toast.LENGTH_LONG)
-                                      .show();
-                          }
-
-                      } else {
                           Toast.makeText(getApplicationContext(),
                                   "Заполните все поля", Toast.LENGTH_SHORT)
                                   .show();
+                          break;
                       }
+                      if (!isEmailValid(contact[0]) && !isPhoneNumberValid(contact[0])){
+                          Toast.makeText(getApplicationContext(),
+                                  "Введите корректный email или номер телефона", Toast.LENGTH_LONG)
+                                  .show();
+                          break;
+                      }
+                      if (password[0].length() <6){
+                          Toast.makeText(getApplicationContext(),
+                                  "Пароль должен содержать не меньше шести символов", Toast.LENGTH_LONG)
+                                  .show();
+                          break;
+                      }
+                      if (connToDB.checkData(contact[0])){
+                          Log.i("Registration", "Логин оригинальный");
+                          new Thread(new Runnable() {
+                              public void run() {
+                                  connToDB.registration(contact[0], password[0], name[0]);
+
+                              }
+                          }).start();
+                          finish();
+                      }else {
+                          Log.i("Registration", "Пользователь с таким логином уже есть");
+                          Toast.makeText(getApplicationContext(),
+                                  "Пользователь с таким логином уже существует", Toast.LENGTH_LONG)
+                                  .show();
+                      }
+
+
+
+
                       break;
               }
             }
         };
         btnReg.setOnClickListener(onClickListener);
     }
+
+
 
     private boolean isPhoneNumberValid(String number){
         Log.i("Registration", "isPhoneNumberValid");
