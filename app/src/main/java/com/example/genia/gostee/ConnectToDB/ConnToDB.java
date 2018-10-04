@@ -128,6 +128,28 @@ public class ConnToDB {
         return false;
     }
 
+    /*public void sendEmail(){
+
+        ConnectDB connectDB = null;
+        String ansver;
+
+        try {
+            String server_name = "http://r2551241.beget.tech";
+            String input = server_name
+                    + "/gostee.php?action=sendemail";
+            connectDB = new ConnectDB(input);
+            connectDB.execute();
+            ansver =  connectDB.get();
+            if (ansver != null && !ansver.isEmpty()) {
+                Log.i("ConnDB",
+                        "+ Connect ---------- reply contains JSON:" + ansver);
+
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+    }*/
+
     private class ConnectDB extends AsyncTask<Object, Object, String>
     {
         String input;

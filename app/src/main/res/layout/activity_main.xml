@@ -75,12 +75,9 @@
                     android:layout_marginRight="45dp"
                     android:layout_marginTop="20dp"
                     android:backgroundTint="@color/colorOrange"
-                    android:backgroundTintMode="src_in"
-                    android:cursorVisible="false"
                     android:drawableStart="@drawable/humanicons"
                     android:ems="10"
                     android:inputType="textPersonName"
-                    android:singleLine="false"
                     android:textSize="18sp"
                     tools:ignore="LabelFor" />
 
@@ -178,7 +175,7 @@
                         tools:ignore="NestedWeights" />
 
                     <TextView
-                        android:id="@+id/textView4"
+                        android:id="@+id/tvRecovery"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"

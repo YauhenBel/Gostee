@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.genia.gostee">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -12,22 +13,28 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label=""
+        android:label="Gostee"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".Controllers.MainActivity">
+        <activity android:name=".Controllers.MainActivity"
+            tools:ignore="InnerclassSeparator"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Controllers.Main2Activity" />
-        <activity android:name=".Controllers.Registration"
-            android:windowSoftInputMode="adjustResize">
-
-        </activity>
+        <activity android:name=".Controllers.Main2Activity"
+            tools:ignore="InnerclassSeparator" />
+        <activity
+            android:name=".Controllers.Registration"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
+            tools:ignore="InnerclassSeparator" />
+        <activity android:name=".Controllers.RecoveryPassword"
+            tools:ignore="InnerclassSeparator" />
     </application>
 
 </manifest>
