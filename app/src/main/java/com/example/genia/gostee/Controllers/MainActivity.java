@@ -21,8 +21,6 @@ public class MainActivity extends AppCompatActivity {
     Button btnLogIn;
     EditText etLogin, etPassword;
     TextView tvRegistration, tvRecovery;
-    ImageView logo;
-    LinearLayout block;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +32,6 @@ public class MainActivity extends AppCompatActivity {
         etPassword = (EditText) findViewById(R.id.etPassword);
         tvRegistration = (TextView) findViewById(R.id.tvRegistarton);
         tvRecovery = (TextView) findViewById(R.id.tvRecovery);
-        logo = (ImageView) findViewById(R.id.logo);
-        block = (LinearLayout) findViewById(R.id.block2);
 
 
 
