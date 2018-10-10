@@ -2,18 +2,82 @@ package com.example.genia.gostee.Controllers;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.genia.gostee.ConnectToDB.ConnToDB;
 import com.example.genia.gostee.R;
 
+import java.util.Random;
+
 public class RecoveryPassword extends AppCompatActivity {
+
+    EditText newPassword;
+    Button btnSendNewPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recoverypass);
 
-        //ConnToDB connToDB = new ConnToDB();
-        //connToDB.sendEmail();
+        newPassword = (EditText) findViewById(R.id.edRecoveryPassword);
+        btnSendNewPassword = (Button) findViewById(R.id.btnSendNewPassword);
+
+        OnClickListener onClickListener = new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (view.getId()){
+                    case R.id.btnSendNewPassword:
+                        createNewPassword();
+                        break;
+                }
+            }
+        };
+
+        btnSendNewPassword.setOnClickListener(onClickListener);
     }
+
+    private void createNewPassword() {
+        String login = newPassword.getText().toString();
+        String newPassword = generateString(10);
+
+        ConnToDB connToDB = new ConnToDB();
+        if (connToDB.checkData(login)){
+            Toast.makeText(getApplicationContext(),
+                    "Пользователь с таким логином не найден", Toast.LENGTH_SHORT)
+                    .show();
+            return;
+        }
+        if (!connToDB.newPassword(newPassword, login)){
+            Toast.makeText(getApplicationContext(),
+                    "Возникла непредвиденная ошибка. Повторите еще раз.", Toast.LENGTH_SHORT)
+                    .show();
+            return;
+        }
+        if (connToDB.sendMess(login, newPassword)){
+            finish();
+        }else{
+            Toast.makeText(getApplicationContext(),
+                    "Возникла непредвиденная ошибка. Повторите еще раз.", Toast.LENGTH_SHORT)
+                    .show();
+        }
+
+    }
+
+    public static String generateString(int length)
+    {
+        String RANDSTRING = "ACEFGHJKLMNPQRUVWXYabcdefhijkprstuvwx0123456789";
+        Random ran = new Random();
+        char[] text = new char[length];
+        for (int i = 0; i < length; i++)
+        {
+            text[i] = RANDSTRING.charAt(ran.nextInt(RANDSTRING.length()));
+        }
+        return new String(text);
+    }
+
+
 }

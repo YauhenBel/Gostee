@@ -115,7 +115,7 @@
                 <EditText
                     android:id="@+id/edContact"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="40dp"
                     android:background="@drawable/back_edittext"
                     android:ems="10"
                     android:gravity="center"
@@ -136,7 +136,28 @@
                 <EditText
                     android:id="@+id/edPassword"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/back_edittext"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:inputType="textPassword"
+                    android:textSize="15sp"
+                    tools:ignore="LabelFor" />
+
+                <TextView
+                    android:id="@+id/textView68"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="@string/textPasswordRepeat"
+                    android:textSize="15sp" />
+
+                <EditText
+                    android:id="@+id/edPasswordRepeat"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
                     android:background="@drawable/back_edittext"
                     android:ems="10"
                     android:gravity="center"
@@ -157,7 +178,7 @@
                 <EditText
                     android:id="@+id/edName"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="40dp"
                     android:background="@drawable/back_edittext"
                     android:ems="10"
                     android:gravity="center"

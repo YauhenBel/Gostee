@@ -15,61 +15,92 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
 
-    <TextView
-        android:id="@+id/textView10"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:gravity="center"
-        android:paddingEnd="20dp"
-        android:paddingStart="20dp"
-        android:text="@string/textRecoveryPassword"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include2" />
-
-    <TextView
-        android:id="@+id/textView9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="@string/yourLogin"
-        android:textAlignment="center"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toTopOf="@+id/edRecoveryLogin"
-        tools:ignore="MissingConstraints,NotSibling"
-        tools:layout_editor_absoluteX="111dp" />
-
-    <EditText
-        android:id="@+id/edRecoveryLogin"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@drawable/back_edittext"
-        android:ems="10"
-        android:gravity="center"
-        android:inputType="textPersonName"
-        android:textSize="15sp"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp"
-        tools:ignore="LabelFor,MissingConstraints"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="253dp" />
-
-    <Button
-        android:id="@+id/btnSendNewPassword"
-        android:layout_width="0dp"
-        android:layout_height="70dp"
-        android:layout_marginBottom="15dp"
-        android:layout_marginEnd="45dp"
-        android:layout_marginStart="45dp"
-        android:background="@drawable/button_states"
-        android:text="@string/textSendPassword"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        android:textStyle="bold"
+        android:layout_height="0dp"
+        android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/include2"
+        tools:layout_editor_absoluteX="0dp"
+        tools:ignore="MissingConstraints">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                android:text="@string/textRecoveryPassword"
+                android:textSize="18sp"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="MissingConstraints,NotSibling"
+                tools:layout_editor_absoluteX="0dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@+id/btnSendNewPassword"
+                app:layout_constraintTop_toBottomOf="@+id/textView10">
+
+                <TextView
+                    android:id="@+id/textView9"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/inputYourLogin"
+                    android:textAlignment="center"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toTopOf="@+id/edRecoveryPassword"
+                    tools:ignore="MissingConstraints,NotSibling"
+                    tools:layout_editor_absoluteX="111dp" />
+
+                <EditText
+                    android:id="@+id/edRecoveryPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="45dp"
+                    android:layout_marginStart="45dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/back_edittext"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:inputType="textPersonName"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toTopOf="@+id/btnSendNewPassword"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView10"
+                    tools:ignore="LabelFor,MissingConstraints,NotSibling,TextFields" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnSendNewPassword"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_marginBottom="50dp"
+                android:layout_marginEnd="45dp"
+                android:layout_marginStart="45dp"
+                android:background="@drawable/button_states"
+                android:text="@string/textSendPassword"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
+
+
 
 </android.support.constraint.ConstraintLayout>

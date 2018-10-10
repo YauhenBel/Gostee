@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 
 public class Registration extends AppCompatActivity {
     Button btnReg;
-    EditText edContact, edPassword, edName;
+    EditText edContact, edPassword, edPasswordRepeat,  edName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +40,12 @@ public class Registration extends AppCompatActivity {
 
         edContact = (EditText) findViewById(R.id.edContact);
         edPassword = (EditText) findViewById(R.id.edPassword);
+        edPasswordRepeat = (EditText) findViewById(R.id.edPasswordRepeat);
         edName = (EditText) findViewById(R.id.edName);
         final ConnToDB connToDB = new ConnToDB();
         final String[] contact = {""};
         final String[] password = {""};
+        final String[] passwordRepeat = {""};
         final String[] name = {""};
 
         OnClickListener onClickListener = new OnClickListener() {
@@ -54,6 +56,7 @@ public class Registration extends AppCompatActivity {
                   case R.id.btnRegistration:
                       contact[0] = edContact.getText().toString();
                       password[0] = edPassword.getText().toString();
+                      passwordRepeat[0] = edPasswordRepeat.getText().toString();
                       name[0] = edName.getText().toString();
                       if (contact[0].isEmpty() || password[0].isEmpty() || name[0].isEmpty()){
 
@@ -71,6 +74,12 @@ public class Registration extends AppCompatActivity {
                       if (password[0].length() <6){
                           Toast.makeText(getApplicationContext(),
                                   "Пароль должен содержать не меньше шести символов", Toast.LENGTH_LONG)
+                                  .show();
+                          break;
+                      }
+                      if (!password[0].equals(passwordRepeat[0])){
+                          Toast.makeText(getApplicationContext(),
+                                  "Введенные вами пароли не совпадают.", Toast.LENGTH_LONG)
                                   .show();
                           break;
                       }

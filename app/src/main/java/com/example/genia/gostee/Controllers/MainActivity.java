@@ -85,12 +85,9 @@ public class MainActivity extends AppCompatActivity {
                         goToRegistration();
                         break;
                     case R.id.tvRecovery:
-                        //goToRecovery();
+                        goToRecovery();
                         break;
-
-
                 }
-
             }
         };
 

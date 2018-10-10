@@ -131,39 +131,74 @@ public class ConnToDB {
         return false;
     }
 
-    public void sendEmail(){
-
+    public boolean sendMess(String login, String password){
         ConnectDB connectDB = null;
         String ansver;
 
         try {
             String server_name = "http://r2551241.beget.tech";
-            String input = server_name
-                    + "/gostee.php?action=sendemail";
+            String input = null;
+            try {
+                input = server_name
+                        + "/gosteeRecoveryPassword.php?action=sendemail" +
+                        "&login="
+                        + URLEncoder.encode(login, "UTF-8")
+                        +"&password="
+                        +URLEncoder.encode(password, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
             connectDB = new ConnectDB(input);
             connectDB.execute();
             ansver =  connectDB.get();
             if (ansver != null && !ansver.isEmpty()) {
                 Log.i("ConnDB",
                         "+ Connect ---------- reply contains JSON:" + ansver);
-
+                if (ansver.equals("0")) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
-    public static String generateString(int length)
-    {
-        String RANDSTRING = "ACEFGHJKLMNPQRUVWXYabcdefhijkprstuvwx0123456789";
-        Random ran = new Random();
-        char[] text = new char[length];
-        for (int i = 0; i < length; i++)
-        {
-            text[i] = RANDSTRING.charAt(ran.nextInt(RANDSTRING.length()));
+    public boolean newPassword(String password, String login){
+        Log.i("ConnDB",
+                "registration - записываем в базу временный пароль");
+        ConnectDB connectDB = null;
+        String ansver;
+        Log.i("ConnDB",
+                "Временный пароль: " + password);
+        StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
+        String encryptedPassword = passwordEncryptor.encryptPassword(password);
+        try {
+            String server_name = "http://r2551241.beget.tech";
+            String input = server_name
+                    + "/gostee.php?action=newpassword&login="
+                    + URLEncoder.encode(login, "UTF-8")
+                    +"&password="
+                    +URLEncoder.encode(encryptedPassword, "UTF-8");
+            connectDB = new ConnectDB(input);
+            connectDB.execute();
+            ansver =  connectDB.get();
+
+            if (ansver != null && !ansver.isEmpty()) {
+                Log.i("ConnDB",
+                        "+ Connect ---------- reply contains JSON:" + ansver);
+                return true;
+            }
+        } catch (InterruptedException | ExecutionException | UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
-        return new String(text);
+        return false;
+
     }
+
+
 
     private class ConnectDB extends AsyncTask<Object, Object, String>
     {
