@@ -19,9 +19,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 public class ConnToDB {
+
+
 
     public Boolean authorization(String mLogin, String mPassword){
 
@@ -128,7 +131,7 @@ public class ConnToDB {
         return false;
     }
 
-    /*public void sendEmail(){
+    public void sendEmail(){
 
         ConnectDB connectDB = null;
         String ansver;
@@ -148,7 +151,19 @@ public class ConnToDB {
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
-    }*/
+    }
+
+    public static String generateString(int length)
+    {
+        String RANDSTRING = "ACEFGHJKLMNPQRUVWXYabcdefhijkprstuvwx0123456789";
+        Random ran = new Random();
+        char[] text = new char[length];
+        for (int i = 0; i < length; i++)
+        {
+            text[i] = RANDSTRING.charAt(ran.nextInt(RANDSTRING.length()));
+        }
+        return new String(text);
+    }
 
     private class ConnectDB extends AsyncTask<Object, Object, String>
     {

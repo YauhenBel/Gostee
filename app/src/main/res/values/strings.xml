@@ -18,5 +18,9 @@
     <string name="todo">TODO</string>
     <string name="textInput">ВОЙТИ</string>
     <string name="todo1">TODO</string>
+    <string name="textRecoveryPassword">Для восстановления пароля вам необходимо ввести свой логин,
+    после чего вам будет сброшен новый пароль для входа</string>
+    <string name="yourLogin">Введите ваш логин:</string>
+    <string name="textSendPassword">ОТПРАВИТЬ</string>
 
 </resources>
