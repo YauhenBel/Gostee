@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.i("MainActivity", "Authorization1");
                             btnLogIn.setEnabled(false);
 
-                            if (connToDB.authorization(etLogin.getText().toString(),
+                            if (connToDB.getUserInformation(etLogin.getText().toString(),
                                     etPassword.getText().toString(), ed)) {
                                 Log.i("MainActivity", "Информация: \n" +
                                 "id = " + sharedPreferences.getString("id", "") + "\n"
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                                 if (sharedPreferences.getString("status", "").equals("0")) {
                                     goToMainWorkScreen();
                                 }else {
-
+                                    goToCreateNewPassword(sharedPreferences.getString("id", ""));
                                 }
                                 btnLogIn.setEnabled(true);
 
@@ -113,8 +113,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void goToMainWorkScreen(){
+    private void goToCreateNewPassword(String id){
         Intent intent = new Intent(this, NewPassword.class);
+        intent.putExtra("id", id);
         startActivity(intent);
     }
 

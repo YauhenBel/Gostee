@@ -35,11 +35,6 @@ public class RecoveryPassword extends AppCompatActivity {
             public void onClick(View view) {
                 switch (view.getId()){
                     case R.id.btnSendNewPassword:
-                        /*new Thread(new Runnable() {
-                            public void run() {
-                                createNewPassword();
-                            }
-                        }).start();*/
                         createNewPassword();
                         break;
                 }

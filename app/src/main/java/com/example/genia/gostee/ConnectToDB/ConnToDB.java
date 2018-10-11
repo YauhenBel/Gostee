@@ -25,11 +25,11 @@ public class ConnToDB {
     ConnectDB connectDB = null;
     String ansver = "";
 
-    public Boolean authorization(String mLogin, String mPassword, Editor ed){
+    public Boolean getUserInformation(String mLogin, String mPassword, Editor ed){
         try {
             String server_name = "http://r2551241.beget.tech";
             String input = server_name
-                    + "/gostee.php?action=input&login="
+                    + "/gostee.php?action=getUserInformation&login="
                     + URLEncoder.encode(mLogin, "UTF-8");
             connectDB = new ConnectDB(input);
             connectDB.execute();
@@ -171,7 +171,7 @@ public class ConnToDB {
         try {
             String server_name = "http://r2551241.beget.tech";
             String input = server_name
-                    + "/gostee.php?action=newpassword&login="
+                    + "/gosteeRecoveryPassword.php?action=temporaryPassword&login="
                     + URLEncoder.encode(login, "UTF-8")
                     +"&password="
                     +URLEncoder.encode(encryptedPassword, "UTF-8");
