@@ -17,25 +17,30 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".Controllers.MainActivity"
-            tools:ignore="InnerclassSeparator"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
-
+        <activity
+            android:name=".Controllers.MainActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
+            tools:ignore="InnerclassSeparator">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Controllers.Main2Activity"
+        <activity
+            android:name=".Controllers.Main2Activity"
             tools:ignore="InnerclassSeparator" />
         <activity
             android:name=".Controllers.Registration"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
             tools:ignore="InnerclassSeparator" />
-        <activity android:name=".Controllers.RecoveryPassword"
+        <activity
+            android:name=".Controllers.RecoveryPassword"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
             tools:ignore="InnerclassSeparator" />
+        <activity
+            android:name=".Controllers.NewPassword"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
     </application>
 
 </manifest>

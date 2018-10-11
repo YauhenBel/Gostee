@@ -1,7 +1,8 @@
 package com.example.genia.gostee.Controllers;
 
 import android.content.Intent;
-import android.support.constraint.ConstraintLayout;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,8 +10,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +20,9 @@ public class MainActivity extends AppCompatActivity {
     Button btnLogIn;
     EditText etLogin, etPassword;
     TextView tvRegistration, tvRecovery;
+    SharedPreferences sharedPreferences;
+    ConnToDB connToDB;
+    Editor ed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +34,9 @@ public class MainActivity extends AppCompatActivity {
         etPassword = (EditText) findViewById(R.id.etPassword);
         tvRegistration = (TextView) findViewById(R.id.tvRegistarton);
         tvRecovery = (TextView) findViewById(R.id.tvRecovery);
-
+        connToDB = new ConnToDB();
+        sharedPreferences = getPreferences(MODE_PRIVATE);
+        ed = sharedPreferences.edit();
 
 
 
@@ -46,10 +50,17 @@ public class MainActivity extends AppCompatActivity {
                                 && !etPassword.getText().toString().isEmpty()) {
                             Log.i("MainActivity", "Authorization1");
                             btnLogIn.setEnabled(false);
-                            ConnToDB connToDB = new ConnToDB();
+
                             if (connToDB.authorization(etLogin.getText().toString(),
-                                    etPassword.getText().toString())) {
-                                goToNewLayout();
+                                    etPassword.getText().toString(), ed)) {
+                                Log.i("MainActivity", "Информация: \n" +
+                                "id = " + sharedPreferences.getString("id", "") + "\n"
+                                + "status = " + sharedPreferences.getString("status", ""));
+                                if (sharedPreferences.getString("status", "").equals("0")) {
+                                    goToMainWorkScreen();
+                                }else {
+
+                                }
                                 btnLogIn.setEnabled(true);
 
                             } else {
@@ -97,10 +108,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void goToNewLayout(){
+    private void goToMainWorkScreen(){
         Intent intent = new Intent(this, Main2Activity.class);
         startActivity(intent);
     }
+
+    private void goToMainWorkScreen(){
+        Intent intent = new Intent(this, NewPassword.class);
+        startActivity(intent);
+    }
+
     private void goToRecovery(){
         Intent intent = new Intent(this, RecoveryPassword.class);
         startActivity(intent);

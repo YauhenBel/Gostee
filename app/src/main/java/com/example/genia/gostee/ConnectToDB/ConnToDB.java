@@ -1,13 +1,10 @@
 package com.example.genia.gostee.ConnectToDB;
 
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.util.Base64;
 import android.util.Log;
-
-import com.example.genia.gostee.Controllers.Registration;
-
 
 import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.json.JSONObject;
@@ -19,18 +16,16 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.Random;
 import java.util.concurrent.ExecutionException;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class ConnToDB {
 
+    ConnectDB connectDB = null;
+    String ansver = "";
 
-
-    public Boolean authorization(String mLogin, String mPassword){
-
-        ConnectDB connectDB = null;
-        String ansver;
-
+    public Boolean authorization(String mLogin, String mPassword, Editor ed){
         try {
             String server_name = "http://r2551241.beget.tech";
             String input = server_name
@@ -46,12 +41,18 @@ public class ConnToDB {
                     ansver = ansver.substring(ansver.indexOf("{"), ansver.indexOf("}") + 1);
                     JSONObject jo = new JSONObject(ansver);
 
-                    Log.i("chat","=================>>> "
-                                    + jo.getString("login") + " "
-                                    + jo.getString("password"));
+                    Log.i("chat","=================>>> \n"
+                                    + "ID - " + jo.getString("id") + " \n"
+                                    + "Логин - " + jo.getString("login") + " \n"
+                                    + "Пароль - " +jo.getString("password") + " "
+                                    + "Имя - " +jo.getString("name") + " \n"
+                                    + "Статус восстановления - " +jo.getString("statusRecovery"));
                     StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
                     if (passwordEncryptor.checkPassword(mPassword, jo.getString("password"))){
                         Log.i("Registration", "Пароли совпадают.");
+                        ed.putString("id", jo.getString("id"));
+                        ed.putString("status", jo.getString("statusRecovery"));
+                        ed.commit();
                         return true;
                     }else{
                         Log.i("Registration", "Пароли не совпадают.");
@@ -75,8 +76,7 @@ public class ConnToDB {
     public Boolean registration (String contact, String password, String name){
         Log.i("ConnDB",
                 "registration - регистрируемся в базе");
-        ConnectDB connectDB = null;
-        String ansver;
+
         Log.i("ConnDB",
                 "Пароль в базу: " + password);
         StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
@@ -106,8 +106,6 @@ public class ConnToDB {
     }
 
     public Boolean checkData (String contact){
-        ConnectDB connectDB = null;
-        String ansver;
         try {
             String server_name = "http://r2551241.beget.tech";
             String input = server_name
@@ -132,9 +130,6 @@ public class ConnToDB {
     }
 
     public boolean sendMess(String login, String password){
-        ConnectDB connectDB = null;
-        String ansver;
-
         try {
             String server_name = "http://r2551241.beget.tech";
             String input = null;
@@ -169,8 +164,6 @@ public class ConnToDB {
     public boolean newPassword(String password, String login){
         Log.i("ConnDB",
                 "registration - записываем в базу временный пароль");
-        ConnectDB connectDB = null;
-        String ansver;
         Log.i("ConnDB",
                 "Временный пароль: " + password);
         StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
