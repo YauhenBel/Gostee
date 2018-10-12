@@ -27,14 +27,14 @@ public class RecoveryPassword extends AppCompatActivity {
         setContentView(R.layout.activity_recoverypass);
 
         newPassword = (EditText) findViewById(R.id.edRecoveryPassword);
-        btnSendNewPassword = (Button) findViewById(R.id.btnSendNewPassword);
+        btnSendNewPassword = (Button) findViewById(R.id.btnSaveRecoveryPassword);
         connToDB = new ConnToDB();
 
         OnClickListener onClickListener = new OnClickListener() {
             @Override
             public void onClick(View view) {
                 switch (view.getId()){
-                    case R.id.btnSendNewPassword:
+                    case R.id.btnSaveRecoveryPassword:
                         createNewPassword();
                         break;
                 }
@@ -57,7 +57,7 @@ public class RecoveryPassword extends AppCompatActivity {
             return;
         }
         Log.i("RecoveryPassword", "Записываем в базу пароль...");
-        if (!connToDB.newPassword(newPassword, login)){
+        if (!connToDB.temporaryPassword(newPassword, login)){
             Log.i("RecoveryPassword", "Ошибка записи пароля в базу.");
             Toast.makeText(getApplicationContext(),
                     "Возникла непредвиденная ошибка. Повторите еще раз.", Toast.LENGTH_SHORT)

@@ -161,7 +161,7 @@ public class ConnToDB {
         return false;
     }
 
-    public boolean newPassword(String password, String login){
+    public boolean temporaryPassword(String password, String login){
         Log.i("ConnDB",
                 "registration - записываем в базу временный пароль");
         Log.i("ConnDB",
@@ -191,6 +191,35 @@ public class ConnToDB {
 
     }
 
+    public boolean newPassword(String password, String id){
+        Log.i("ConnDB",
+                "registration - записываем в базу временный пароль");
+        Log.i("ConnDB",
+                "Временный пароль: " + password);
+        StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
+        String encryptedPassword = passwordEncryptor.encryptPassword(password);
+        try {
+            String server_name = "http://r2551241.beget.tech";
+            String input = server_name
+                    + "/gosteeRecoveryPassword.php?action=newPassword&id="
+                    + URLEncoder.encode(id, "UTF-8")
+                    +"&password="
+                    +URLEncoder.encode(encryptedPassword, "UTF-8");
+            connectDB = new ConnectDB(input);
+            connectDB.execute();
+            ansver =  connectDB.get();
+
+            if (ansver != null && !ansver.isEmpty()) {
+                Log.i("ConnDB",
+                        "+ Connect ---------- reply contains JSON:" + ansver);
+                return true;
+            }
+        } catch (InterruptedException | ExecutionException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return false;
+
+    }
 
 
     private class ConnectDB extends AsyncTask<Object, Object, String>

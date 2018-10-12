@@ -124,10 +124,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    /*public void registration(View view) {
-
-    }*/
-
     private void goToRegistration(){
         Intent intent = new Intent(this, Registration.class);
         startActivity(intent);
