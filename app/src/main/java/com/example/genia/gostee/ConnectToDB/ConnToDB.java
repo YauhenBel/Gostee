@@ -1,10 +1,14 @@
 package com.example.genia.gostee.ConnectToDB;
 
+import android.content.Context;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.json.JSONObject;
@@ -24,45 +28,44 @@ public class ConnToDB {
 
     ConnectDB connectDB = null;
     String ansver = "";
+    String SERVER_NAME = "http://r2551241.beget.tech";
 
     public Boolean getUserInformation(String mLogin, String mPassword, Editor ed){
         try {
-            String server_name = "http://r2551241.beget.tech";
-            String input = server_name
+            String input = SERVER_NAME
                     + "/gostee.php?action=getUserInformation&login="
                     + URLEncoder.encode(mLogin, "UTF-8");
             connectDB = new ConnectDB(input);
             connectDB.execute();
             ansver =  connectDB.get();
             if (ansver != null && !ansver.isEmpty()) {
-                Log.i("ConnDB",
-                        "+ Connect ---------- reply contains JSON:" + ansver);
+               // Log.i("ConnDB", "+ Connect ---------- reply contains JSON:" + ansver);
                 try {
                     ansver = ansver.substring(ansver.indexOf("{"), ansver.indexOf("}") + 1);
                     JSONObject jo = new JSONObject(ansver);
 
-                    Log.i("chat","=================>>> \n"
+                    /*Log.i("chat","=================>>> \n"
                                     + "ID - " + jo.getString("id") + " \n"
                                     + "Логин - " + jo.getString("login") + " \n"
                                     + "Пароль - " +jo.getString("password") + " "
                                     + "Имя - " +jo.getString("name") + " \n"
-                                    + "Статус восстановления - " +jo.getString("statusRecovery"));
+                                    + "Статус восстановления - " +jo.getString("statusRecovery"));*/
                     StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
                     if (passwordEncryptor.checkPassword(mPassword, jo.getString("password"))){
-                        Log.i("Registration", "Пароли совпадают.");
+                        //Log.i("Registration", "Пароли совпадают.");
                         ed.putString("id", jo.getString("id"));
                         ed.putString("status", jo.getString("statusRecovery"));
                         ed.commit();
                         return true;
                     }else{
-                        Log.i("Registration", "Пароли не совпадают.");
+                        //Log.i("Registration", "Пароли не совпадают.");
                         return false;
                     }
 
                 }
                 catch (Exception e) {
-                    Log.i("chat",
-                            "+ ConnDB ---------- server response error:\n"
+                    Log.i("ConnToDB",
+                            "+ ConnToDB ---------- server response error:\n"
                                     + e.getMessage());
                 }
             }
@@ -73,17 +76,16 @@ public class ConnToDB {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public Boolean registration (String contact, String password, String name){
-        Log.i("ConnDB",
+    public Boolean registration (String contact, String password, String name, Context context){
+        Log.i("ConnToDB",
                 "registration - регистрируемся в базе");
 
-        Log.i("ConnDB",
+        Log.i("ConnToDB",
                 "Пароль в базу: " + password);
         StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
         String encryptedPassword = passwordEncryptor.encryptPassword(password);
         try {
-            String server_name = "http://r2551241.beget.tech";
-            String input = server_name
+            String input = SERVER_NAME
                     + "/gostee.php?action=reg&login="
                     + URLEncoder.encode(contact, "UTF-8")
                     +"&password="
@@ -95,8 +97,15 @@ public class ConnToDB {
             ansver =  connectDB.get();
 
             if (ansver != null && !ansver.isEmpty()) {
-                Log.i("ConnDB",
+                Log.i("ConnToDB",
                         "+ Connect ---------- reply contains JSON:" + ansver);
+                if (ansver.equals("1")){
+                    Log.i("ConnToDB", "Пользователь с таким логином уже существует");
+                    Toast.makeText(context,
+                            "Пользователь с таким логином уже существует", Toast.LENGTH_LONG)
+                            .show();
+                    return false;
+                }
                 return true;
             }
         } catch (InterruptedException | ExecutionException | UnsupportedEncodingException e) {
@@ -107,15 +116,14 @@ public class ConnToDB {
 
     public Boolean checkData (String contact){
         try {
-            String server_name = "http://r2551241.beget.tech";
-            String input = server_name
+            String input = SERVER_NAME
                     + "/gostee.php?action=check&login="
                     + URLEncoder.encode(contact, "UTF-8");
             connectDB = new ConnectDB(input);
             connectDB.execute();
             ansver =  connectDB.get();
             if (ansver != null && !ansver.isEmpty()) {
-                Log.i("ConnDB",
+                Log.i("ConnToDB",
                         "+ Connect ---------- reply contains JSON:" + ansver);
                 if (ansver.equals("0")) {
                     return true;
@@ -131,10 +139,9 @@ public class ConnToDB {
 
     public boolean sendMess(String login, String password){
         try {
-            String server_name = "http://r2551241.beget.tech";
             String input = null;
             try {
-                input = server_name
+                input = SERVER_NAME
                         + "/gosteeRecoveryPassword.php?action=sendemail" +
                         "&login="
                         + URLEncoder.encode(login, "UTF-8")
@@ -147,7 +154,7 @@ public class ConnToDB {
             connectDB.execute();
             ansver =  connectDB.get();
             if (ansver != null && !ansver.isEmpty()) {
-                Log.i("ConnDB",
+                Log.i("ConnToDB",
                         "+ Connect ---------- reply contains JSON:" + ansver);
                 if (ansver.equals("0")) {
                     return true;
@@ -161,27 +168,41 @@ public class ConnToDB {
         return false;
     }
 
-    public boolean temporaryPassword(String password, String login){
-        Log.i("ConnDB",
+    public boolean temporaryPassword(String password, String login, Button button){
+        Log.i("ConnToDB",
                 "registration - записываем в базу временный пароль");
-        Log.i("ConnDB",
+        Log.i("ConnToDB",
                 "Временный пароль: " + password);
         StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
         String encryptedPassword = passwordEncryptor.encryptPassword(password);
         try {
-            String server_name = "http://r2551241.beget.tech";
-            String input = server_name
+            String input = SERVER_NAME
                     + "/gosteeRecoveryPassword.php?action=temporaryPassword&login="
                     + URLEncoder.encode(login, "UTF-8")
+                    +"&encryptedPassword="
+                    +URLEncoder.encode(encryptedPassword, "UTF-8")
                     +"&password="
-                    +URLEncoder.encode(encryptedPassword, "UTF-8");
-            connectDB = new ConnectDB(input);
+                    +URLEncoder.encode(password, "UTF-8");
+            connectDB = new ConnectDB(input, button);
             connectDB.execute();
             ansver =  connectDB.get();
-
             if (ansver != null && !ansver.isEmpty()) {
-                Log.i("ConnDB",
+                Log.i("ConnToDB",
                         "+ Connect ---------- reply contains JSON:" + ansver);
+                if (ansver.equals("1")){
+                    return true;
+                }
+                if (ansver.equals("0")){
+                   /* Toast.makeText(context,
+                            "Пользователь с таким логином не найден", Toast.LENGTH_SHORT)
+                            .show();*/
+                    return false;
+                }
+                if (ansver.equals("2")){
+                   /* Toast.makeText(context,
+                            "Возникла непредвиденная ошибка. Повторите еще раз.", Toast.LENGTH_SHORT)
+                            .show();*/
+                }
                 return true;
             }
         } catch (InterruptedException | ExecutionException | UnsupportedEncodingException e) {
@@ -192,9 +213,9 @@ public class ConnToDB {
     }
 
     public boolean newPassword(String password, String id){
-        Log.i("ConnDB",
+        Log.i("ConnToDB",
                 "registration - записываем в базу временный пароль");
-        Log.i("ConnDB",
+        Log.i("ConnToDB",
                 "Временный пароль: " + password);
         StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
         String encryptedPassword = passwordEncryptor.encryptPassword(password);
@@ -210,7 +231,7 @@ public class ConnToDB {
             ansver =  connectDB.get();
 
             if (ansver != null && !ansver.isEmpty()) {
-                Log.i("ConnDB",
+                Log.i("ConnToDB",
                         "+ Connect ---------- reply contains JSON:" + ansver);
                 return true;
             }
@@ -222,68 +243,5 @@ public class ConnToDB {
     }
 
 
-    private class ConnectDB extends AsyncTask<Object, Object, String>
-    {
-        String input;
-        ConnectDB(String _input){
-            input = _input;
-        }
-        String ansver;
-        HttpURLConnection conn;
-        
 
-        @Override
-        protected String doInBackground(Object... voids) {
-            try {
-
-
-                Log.i("chat",
-                        "+ ChatActivity - send request on the server "
-                                + input);
-                URL url = new URL(input);
-                conn = (HttpURLConnection) url.openConnection();
-                conn.setReadTimeout(10000);
-                conn.setConnectTimeout(15000);
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("User-Agent", "Mozilla/5.0");
-                conn.setDoInput(true);
-                conn.connect();
-                Integer res = conn.getResponseCode();
-                Log.i("chat", "+ MainActivity - answer from server (200 = ОК): "
-                        + res.toString());
-
-            } catch (Exception e) {
-                Log.i("chat",
-                        "+ MainActivity - answer from server ERROR: "
-                                + e.getMessage());
-            }
-            try {
-                InputStream is = conn.getInputStream();
-                BufferedReader br = new BufferedReader(
-                        new InputStreamReader(is, "UTF-8"));
-                StringBuilder sb = new StringBuilder();
-                String bfr_st = null;
-                while ((bfr_st = br.readLine()) != null) {
-                    sb.append(bfr_st);
-                }
-                Log.i("chat", "+ FoneService - Full answer from server: "
-                        + sb.toString());
-                ansver = sb.toString();
-                ansver = ansver.substring(ansver.indexOf("["), ansver.indexOf("]") + 1);
-
-                Log.i("chat", "+ FoneService answer: " + ansver);
-
-                is.close();
-                br.close();
-            }
-            catch (Exception e) {
-                Log.i("chat", "+ FoneService error: " + e.getMessage());
-            }
-            finally {
-                conn.disconnect();
-            }
-            return ansver;
-
-        }
-    }
 }

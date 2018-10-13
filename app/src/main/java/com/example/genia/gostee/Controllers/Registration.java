@@ -55,47 +55,7 @@ public class Registration extends AppCompatActivity {
               switch (view.getId()){
 
                   case R.id.btnReg:
-                      Log.i("Registration", "Кнопка регистрации");
-                      contact = edContact.getText().toString();
-                      password = edPassword.getText().toString();
-                      passwordRepeat = edPasswordRepeat.getText().toString();
-                      name = edName.getText().toString();
-                      if (contact.isEmpty() || password.isEmpty() || name.isEmpty()){
-
-                          Toast.makeText(getApplicationContext(),
-                                  "Заполните все поля", Toast.LENGTH_SHORT)
-                                  .show();
-                          break;
-                      }
-                      if (!isEmailValid(contact) && !isPhoneNumberValid(contact)){
-                          Toast.makeText(getApplicationContext(),
-                                  "Введите корректный email или номер телефона", Toast.LENGTH_LONG)
-                                  .show();
-                          break;
-                      }
-                      if (password.length() <6){
-                          Toast.makeText(getApplicationContext(),
-                                  "Пароль должен содержать не меньше шести символов", Toast.LENGTH_LONG)
-                                  .show();
-                          break;
-                      }
-                      if (!password.equals(passwordRepeat)){
-                          Toast.makeText(getApplicationContext(),
-                                  "Введенные вами пароли не совпадают.", Toast.LENGTH_LONG)
-                                  .show();
-                          break;
-                      }
-                      if (connToDB.checkData(contact)){
-                          Log.i("Registration", "Логин оригинальный");
-                          connToDB.registration(contact, password, name);
-                          finish();
-                      }else {
-                          Log.i("Registration", "Пользователь с таким логином уже есть");
-                          Toast.makeText(getApplicationContext(),
-                                  "Пользователь с таким логином уже существует", Toast.LENGTH_LONG)
-                                  .show();
-                      }
-
+                      registration();
                       break;
               }
             }
@@ -105,7 +65,37 @@ public class Registration extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void registration() {
+        Log.i("Registration", "Кнопка регистрации");
+        contact = edContact.getText().toString();
+        password = edPassword.getText().toString();
+        passwordRepeat = edPasswordRepeat.getText().toString();
+        name = edName.getText().toString();
+        if (contact.isEmpty() || password.isEmpty() || name.isEmpty()){
 
+            Toast.makeText(getApplicationContext(),
+                    "Заполните все поля", Toast.LENGTH_SHORT)
+                    .show();
+            return;
+        }
+        if (!isEmailValid(contact) && !isPhoneNumberValid(contact)){
+            Toast.makeText(getApplicationContext(),
+                    "Введите корректный email или номер телефона", Toast.LENGTH_LONG)
+                    .show();
+            return;
+        }
+        if (password.length() <6){
+            Toast.makeText(getApplicationContext(),
+                    "Пароль должен содержать не меньше шести символов", Toast.LENGTH_LONG)
+                    .show();
+            return;
+        }
+        if (!password.equals(passwordRepeat)){
+            Toast.makeText(getApplicationContext(),
+                    "Введенные вами пароли не совпадают.", Toast.LENGTH_LONG)
+                    .show();
+            return;
+        }
+        if (connToDB.registration(contact, password, name, getApplicationContext())) finish();
     }
 
 

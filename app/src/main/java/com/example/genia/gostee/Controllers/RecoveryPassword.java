@@ -1,5 +1,8 @@
 package com.example.genia.gostee.Controllers;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -7,9 +10,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.genia.gostee.ConnectToDB.ConnToDB;
+import com.example.genia.gostee.ConnectToDB.ConnectDB;
 import com.example.genia.gostee.R;
 
 import java.util.Random;
@@ -19,8 +24,14 @@ public class RecoveryPassword extends AppCompatActivity {
     EditText newPassword;
     Button btnSendNewPassword;
     ConnToDB connToDB;
+    SharedPreferences.Editor ed;
+    View viewBlock;
+    Context context;
+    TextView textView;
 
 
+
+    @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,52 +39,44 @@ public class RecoveryPassword extends AppCompatActivity {
 
         newPassword = (EditText) findViewById(R.id.edRecoveryPassword);
         btnSendNewPassword = (Button) findViewById(R.id.btnSaveRecoveryPassword);
+        viewBlock = (View) findViewById(R.id.viewBlock);
+        textView = (TextView) findViewById(R.id.textView4);
         connToDB = new ConnToDB();
+        context = getApplicationContext();
+
 
         OnClickListener onClickListener = new OnClickListener() {
+            @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View view) {
+                btnSendNewPassword.setEnabled(false);
                 switch (view.getId()){
                     case R.id.btnSaveRecoveryPassword:
-                        createNewPassword();
+                        btnSendNewPassword.setEnabled(false);
+                        btnSendNewPassword.setClickable(false);
+                        textView.setText("Block");
+
+                                createTemporaryPassword();
+
+                        btnSendNewPassword.setEnabled(true);
+                        btnSendNewPassword.setClickable(true);
+                        textView.setText("Unblock");
+
                         break;
                 }
+
             }
         };
 
         btnSendNewPassword.setOnClickListener(onClickListener);
     }
 
-    private void createNewPassword() {
+    private void createTemporaryPassword() {
+
         String login = newPassword.getText().toString();
         String newPassword = generateString(10);
+        connToDB.temporaryPassword(newPassword, login, btnSendNewPassword);
 
-        Log.i("RecoveryPassword", "Проверяем логин...");
-        if (connToDB.checkData(login)){
-            Log.i("RecoveryPassword", "Пользователь с таким логином не найден.");
-            Toast.makeText(getApplicationContext(),
-                    "Пользователь с таким логином не найден", Toast.LENGTH_SHORT)
-                    .show();
-            return;
-        }
-        Log.i("RecoveryPassword", "Записываем в базу пароль...");
-        if (!connToDB.temporaryPassword(newPassword, login)){
-            Log.i("RecoveryPassword", "Ошибка записи пароля в базу.");
-            Toast.makeText(getApplicationContext(),
-                    "Возникла непредвиденная ошибка. Повторите еще раз.", Toast.LENGTH_SHORT)
-                    .show();
-            return;
-        }
-        Log.i("RecoveryPassword", "Отправляем пользователю сообщение с новым паролем.");
-        if (connToDB.sendMess(login, newPassword)){
-            Log.i("RecoveryPassword", "Пароль доставлен.");
-            finish();
-        }else{
-            Log.i("RecoveryPassword", "Ошибка. Пароль не доставлен.");
-            Toast.makeText(getApplicationContext(),
-                    "Возникла непредвиденная ошибка. Повторите еще раз.", Toast.LENGTH_SHORT)
-                    .show();
-        }
 
     }
 
