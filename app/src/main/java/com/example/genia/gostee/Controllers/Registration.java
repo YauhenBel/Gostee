@@ -1,5 +1,7 @@
 package com.example.genia.gostee.Controllers;
 
+import android.annotation.SuppressLint;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -12,12 +14,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.genia.gostee.ConnectToDB.ConnToDB;
 import com.example.genia.gostee.R;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 
+import org.jasypt.util.password.StrongPasswordEncryptor;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,8 +36,9 @@ import java.util.regex.Pattern;
 public class Registration extends AppCompatActivity {
     Button btnReg;
     EditText edContact, edPassword, edPasswordRepeat,  edName;
-    String contact, password, passwordRepeat, name;
-    ConnToDB connToDB;
+    String contact = "", password = "", passwordRepeat = "", name = "", ansver = "";
+    String encryptedPassword = "";
+    RegisteNewUser registeNewUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +54,11 @@ public class Registration extends AppCompatActivity {
         edPassword = (EditText) findViewById(R.id.edPassword);
         edPasswordRepeat = (EditText) findViewById(R.id.edPasswordRepeat);
         edName = (EditText) findViewById(R.id.edName);
-        connToDB = new ConnToDB();
         contact = "";
         password = "";
         passwordRepeat = "";
         name = "";
+
 
         OnClickListener onClickListener = new OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -95,7 +107,16 @@ public class Registration extends AppCompatActivity {
                     .show();
             return;
         }
-        if (connToDB.registration(contact, password, name, getApplicationContext())) finish();
+        StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
+        encryptedPassword = passwordEncryptor.encryptPassword(password);
+        registeNewUser = new RegisteNewUser();
+        registeNewUser.execute();
+        try {
+            registeNewUser.get();
+            finish();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -138,5 +159,94 @@ public class Registration extends AppCompatActivity {
 
     public void goBack(View view) {
         finish();
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    public class RegisteNewUser extends AsyncTask<Void, Void, Void>
+    {
+        HttpURLConnection conn;
+        String SERVER_NAME = "http://r2551241.beget.tech";
+        String input = "";
+
+        @SuppressLint("SetTextI18n")
+        @Override
+        protected void onPreExecute() {
+            Log.i("SendRecoveryPassword","Block");
+            btnReg.setEnabled(false);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                try {
+                    input = SERVER_NAME
+                            + "/gostee.php?action=reg&login="
+                            + URLEncoder.encode(contact, "UTF-8")
+                            +"&password="
+                            +URLEncoder.encode(encryptedPassword, "UTF-8")
+                            +"&name="
+                            +URLEncoder.encode(name, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+                Log.i("SendRecoveryPassword",
+                        "+ ChatActivity - send request on the server "
+                                + input);
+                URL url = new URL(input);
+                conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(10000);
+                conn.setConnectTimeout(15000);
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("User-Agent", "Mozilla/5.0");
+                conn.setDoInput(true);
+                conn.connect();
+                Integer res = conn.getResponseCode();
+                Log.i("SendRecoveryPassword", "+ MainActivity - answer from server (200 = ОК): "
+                        + res.toString());
+
+            } catch (Exception e) {
+                Log.i("SendRecoveryPassword",
+                        "+ MainActivity - answer from server ERROR: "
+                                + e.getMessage());
+            }
+            try {
+                InputStream is = conn.getInputStream();
+                BufferedReader br = new BufferedReader(
+                        new InputStreamReader(is, "UTF-8"));
+                StringBuilder sb = new StringBuilder();
+                String bfr_st = null;
+                while ((bfr_st = br.readLine()) != null) {
+                    sb.append(bfr_st);
+                }
+                Log.i("SendRecoveryPassword", "+ FoneService - Full answer from server: "
+                        + sb.toString());
+                ansver = sb.toString();
+                ansver = ansver.substring(ansver.indexOf("["), ansver.indexOf("]") + 1);
+
+                Log.i("SendRecoveryPassword", "+ FoneService answer: " + ansver);
+
+                is.close();
+                br.close();
+            }
+            catch (Exception e) {
+                Log.i("SendRecoveryPassword", "+ FoneService error: " + e.getMessage());
+            }
+            finally {
+                conn.disconnect();
+            }
+
+            return null;
+        }
+
+        @SuppressLint("SetTextI18n")
+        @Override
+        protected void onPostExecute(Void sVoid) {
+            Log.i("SendRecoveryPassword","Unblock");
+            btnReg.setEnabled(true);
+            super.onPostExecute(sVoid);
+        }
+
     }
 }

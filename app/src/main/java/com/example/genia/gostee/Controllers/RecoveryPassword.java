@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.example.genia.gostee.R;
 
@@ -24,17 +23,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
 
 public class RecoveryPassword extends AppCompatActivity {
 
     EditText newPassword;
     Button btnSendNewPassword;
     Context context;
-    TextView textView;
     String ansver = "", login = "", temporaryPassword = "" ;
-    String input = "";
-    HttpURLConnection conn;
-    String SERVER_NAME = "http://r2551241.beget.tech";
+
+    SendRecoveryPassword sendRecoveryPassword;
 
 
 
@@ -46,7 +44,6 @@ public class RecoveryPassword extends AppCompatActivity {
 
         newPassword = (EditText) findViewById(R.id.edRecoveryPassword);
         btnSendNewPassword = (Button) findViewById(R.id.btnSaveRecoveryPassword);
-        textView = (TextView) findViewById(R.id.textView4);
 
         context = getApplicationContext();
 
@@ -68,14 +65,22 @@ public class RecoveryPassword extends AppCompatActivity {
     private void createTemporaryPassword() {
         Log.i("ConnToDB","createTemporaryPassword");
         login = newPassword.getText().toString();
-        temporaryPassword = generateString(10);
-        SendRecoveryPassword sendRecoveryPassword = new SendRecoveryPassword();
+        if (login.isEmpty()){
+            Toast.makeText(context,
+                    "Введите логин", Toast.LENGTH_SHORT)
+                    .show();
+            return;
+        }
+        temporaryPassword = generateString(6);
+        sendRecoveryPassword = new SendRecoveryPassword();
         sendRecoveryPassword.execute();
+        try {
+            sendRecoveryPassword.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
 
-
-        sendRecoveryPassword.get();
-
-            Log.i("ConnToDB","createTemporaryPassword4");
+        Log.i("ConnToDB","createTemporaryPassword4");
 
 
         if (ansver != null && !ansver.isEmpty()) {
@@ -95,8 +100,17 @@ public class RecoveryPassword extends AppCompatActivity {
                             "Возникла непредвиденная ошибка. Повторите еще раз.", Toast.LENGTH_SHORT)
                             .show();
             }
+            if (ansver.equals("3")){
+                Toast.makeText(context,
+                        "Пароль уже отправлен на вашу почту.", Toast.LENGTH_SHORT)
+                        .show();
+            }
         }
 
+    }
+
+    public void goBack(View view) {
+        finish();
     }
 
     public static String generateString(int length)
@@ -112,8 +126,11 @@ public class RecoveryPassword extends AppCompatActivity {
     }
 
     @SuppressLint("StaticFieldLeak")
-    public class SendRecoveryPassword extends AsyncTask<Object, Object, String>
+    public class SendRecoveryPassword extends AsyncTask<Void, Void, Void>
     {
+        String input = "";
+        HttpURLConnection conn;
+        String SERVER_NAME = "http://r2551241.beget.tech";
 
 
         @SuppressLint("SetTextI18n")
@@ -126,7 +143,7 @@ public class RecoveryPassword extends AppCompatActivity {
         }
 
         @Override
-        protected String doInBackground(Object... voids) {
+        protected Void doInBackground(Void... voids) {
             try {
                         Log.i("SendRecoveryPassword",
                                 "registration - записываем в базу временный пароль");
@@ -193,17 +210,18 @@ public class RecoveryPassword extends AppCompatActivity {
             finally {
                 conn.disconnect();
             }
-            return ansver;
 
+            return null;
         }
 
         @SuppressLint("SetTextI18n")
         @Override
-        protected void onPostExecute(String s) {
+        protected void onPostExecute(Void sVoid) {
             Log.i("SendRecoveryPassword","Unblock");
             btnSendNewPassword.setText("Unblock");
             btnSendNewPassword.setEnabled(true);
-           super.onPostExecute(s);
+           super.onPostExecute(sVoid);
         }
+
     }
 }

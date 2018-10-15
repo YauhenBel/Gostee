@@ -2,8 +2,7 @@ package com.example.genia.gostee.Controllers;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,18 +13,27 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.genia.gostee.ConnectToDB.ConnToDB;
 import com.example.genia.gostee.R;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.concurrent.TimeUnit;
+import org.jasypt.util.password.StrongPasswordEncryptor;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
     Button btnLogIn;
     EditText etLogin, etPassword;
     TextView tvRegistration, tvRecovery;
-    SharedPreferences sharedPreferences;
-    ConnToDB connToDB;
-    Editor ed;
+    String ansver = "", input = "", editLogin = "";
+    ConnectToAuthorization connectToAuthorization;
 
     @SuppressLint("CommitPrefEdits")
     @Override
@@ -37,9 +45,7 @@ public class MainActivity extends AppCompatActivity {
         etPassword = (EditText) findViewById(R.id.etPassword);
         tvRegistration = (TextView) findViewById(R.id.tvRegistarton);
         tvRecovery = (TextView) findViewById(R.id.tvRecovery);
-        connToDB = new ConnToDB();
-        sharedPreferences = getPreferences(MODE_PRIVATE);
-        ed = sharedPreferences.edit();
+
 
         OnClickListener onClickListener = new OnClickListener() {
             @Override
@@ -66,8 +72,9 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("ResourceAsColor")
     private void userLogIn() {
         Log.i("MainActivity", "Authorization");
-        String editLogin = etLogin.getText().toString();
+        editLogin = etLogin.getText().toString();
         String editPassword = etPassword.getText().toString();
+
         if (editLogin.isEmpty() || editPassword.isEmpty()) {
             Log.i("MainActivity", "Authorization2");
             Toast.makeText(getApplicationContext(),
@@ -75,22 +82,53 @@ public class MainActivity extends AppCompatActivity {
                     .show();
             return;
         }
-            Log.i("MainActivity", "Authorization1");
-            btnLogIn.setEnabled(false);
-            if (connToDB.getUserInformation(editLogin, editPassword, ed)) {
-                if (sharedPreferences.getString("status", "").equals("0")) {
-                    goToMainWorkScreen();
-                }else {
-                    goToCreateNewPassword(sharedPreferences.getString("id", ""));
+
+        Log.i("MainActivity", "Authorization1");
+        connectToAuthorization = new ConnectToAuthorization();
+        connectToAuthorization.execute();
+        try {
+            connectToAuthorization.get();
+        } catch (InterruptedException | ExecutionException e1) {
+            e1.printStackTrace();
+        }
+
+        if (ansver != null && !ansver.isEmpty()) {
+            Log.i("ConnDB", "+ Connect ---------- reply contains JSON:" + ansver);
+            try {
+                Log.i("userLogIn", " - answer: " + ansver);
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode jsonNode = objectMapper.readTree(ansver);
+
+                JsonNode idNode = jsonNode.path("id");
+                JsonNode passwordNode = jsonNode.path("password");
+                JsonNode statusNode = jsonNode.path("statusRecovery");
+
+                StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
+                if (passwordEncryptor.checkPassword(editPassword, passwordNode.asText())){
+                    Log.i("Registration", "Пароли совпадают.");
+
+                    if (statusNode.asText().equals("0")) {
+                        goToMainWorkScreen();
+                    }else {
+                        goToCreateNewPassword(idNode.asText());
+                    }
+                }else{
+                    Log.i("Registration", "Пароли не совпадают.");
+                    Toast.makeText(getApplicationContext(),
+                            "Неправильный логин или пароль", Toast.LENGTH_SHORT)
+                            .show();
                 }
 
-            } else {
+            }
+            catch (Exception e) {
                 Toast.makeText(getApplicationContext(),
                         "Неправильный логин или пароль", Toast.LENGTH_SHORT)
                         .show();
-
+                Log.i("ConnToDB",
+                        "+ ConnToDB ---------- server response error:\n"
+                                + e.getMessage());
             }
-        btnLogIn.setEnabled(true);
+        }
     }
 
 
@@ -113,5 +151,89 @@ public class MainActivity extends AppCompatActivity {
     private void goToRegistration(){
         Intent intent = new Intent(this, Registration.class);
         startActivity(intent);
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    public class ConnectToAuthorization extends AsyncTask<Void, Void, Void>
+    {
+        HttpURLConnection conn;
+        String SERVER_NAME = "http://r2551241.beget.tech";
+
+
+        @SuppressLint("SetTextI18n")
+        @Override
+        protected void onPreExecute() {
+            Log.i("SendRecoveryPassword","Block");
+            btnLogIn.setEnabled(false);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                try {
+                    input = SERVER_NAME
+                            + "/gostee.php?action=getUserInformation&login="
+                            + URLEncoder.encode(editLogin, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+                Log.i("SendRecoveryPassword",
+                        "+ ChatActivity - send request on the server "
+                                + input);
+                URL url = new URL(input);
+                conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(10000);
+                conn.setConnectTimeout(15000);
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("User-Agent", "Mozilla/5.0");
+                conn.setDoInput(true);
+                conn.connect();
+                Integer res = conn.getResponseCode();
+                Log.i("SendRecoveryPassword", "+ MainActivity - answer from server (200 = ОК): "
+                        + res.toString());
+
+            } catch (Exception e) {
+                Log.i("SendRecoveryPassword",
+                        "+ MainActivity - answer from server ERROR: "
+                                + e.getMessage());
+            }
+            try {
+                InputStream is = conn.getInputStream();
+                BufferedReader br = new BufferedReader(
+                        new InputStreamReader(is, "UTF-8"));
+                StringBuilder sb = new StringBuilder();
+                String bfr_st = null;
+                while ((bfr_st = br.readLine()) != null) {
+                    sb.append(bfr_st);
+                }
+                Log.i("SendRecoveryPassword", " - Full answer from server: "
+                        + sb.toString());
+                ansver = sb.toString();
+                ansver = ansver.substring(ansver.indexOf("[") + 1, ansver.indexOf("]"));
+                Log.i("SendRecoveryPassword", " - answer: " + ansver);
+
+                is.close();
+                br.close();
+            }
+            catch (Exception e) {
+                Log.i("SendRecoveryPassword", " - error: " + e.getMessage());
+            }
+            finally {
+                conn.disconnect();
+            }
+
+            return null;
+        }
+
+        @SuppressLint("SetTextI18n")
+        @Override
+        protected void onPostExecute(Void sVoid) {
+            Log.i("SendRecoveryPassword","Unblock");
+            btnLogIn.setEnabled(true);
+            super.onPostExecute(sVoid);
+        }
+
     }
 }
