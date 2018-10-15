@@ -114,60 +114,6 @@ public class ConnToDB {
         return false;
     }
 
-    public Boolean checkData (String contact){
-        try {
-            String input = SERVER_NAME
-                    + "/gostee.php?action=check&login="
-                    + URLEncoder.encode(contact, "UTF-8");
-            connectDB = new ConnectDB(input);
-            connectDB.execute();
-            ansver =  connectDB.get();
-            if (ansver != null && !ansver.isEmpty()) {
-                Log.i("ConnToDB",
-                        "+ Connect ---------- reply contains JSON:" + ansver);
-                if (ansver.equals("0")) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        } catch (InterruptedException | ExecutionException | UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public boolean sendMess(String login, String password){
-        try {
-            String input = null;
-            try {
-                input = SERVER_NAME
-                        + "/gosteeRecoveryPassword.php?action=sendemail" +
-                        "&login="
-                        + URLEncoder.encode(login, "UTF-8")
-                        +"&password="
-                        +URLEncoder.encode(password, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            connectDB = new ConnectDB(input);
-            connectDB.execute();
-            ansver =  connectDB.get();
-            if (ansver != null && !ansver.isEmpty()) {
-                Log.i("ConnToDB",
-                        "+ Connect ---------- reply contains JSON:" + ansver);
-                if (ansver.equals("0")) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
     public boolean temporaryPassword(String password, String login, Button button){
         Log.i("ConnToDB",
                 "registration - записываем в базу временный пароль");

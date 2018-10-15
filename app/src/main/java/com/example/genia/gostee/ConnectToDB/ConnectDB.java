@@ -1,19 +1,33 @@
 package com.example.genia.gostee.ConnectToDB;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Button;
 
+import org.jasypt.util.password.StrongPasswordEncryptor;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
 public class ConnectDB extends AsyncTask<Object, Object, String>
 {
-    String input;
-    Button button;
+    private String input, password, login;
+    @SuppressLint("StaticFieldLeak")
+    private Button button = null;
+    private String ansver;
+    private HttpURLConnection conn;
+    private String SERVER_NAME = "http://r2551241.beget.tech";
+    private int num;
+
+    public ConnectDB(){
+
+    }
 
     ConnectDB(String _input){
         input = _input;
@@ -22,24 +36,55 @@ public class ConnectDB extends AsyncTask<Object, Object, String>
         input = _input;
         button = btn;
     }
-    String ansver;
-    HttpURLConnection conn;
 
-    @Override
+    public ConnectDB(String _password, String _login, Button _button, int _num) {
+        button = _button;
+        password = _password;
+        login = _login;
+        num = _num;
+    }
+
+
+   @SuppressLint("SetTextI18n")
+   @Override
     protected void onPreExecute() {
+        button.setText("Block");
         button.setEnabled(false);
         super.onPreExecute();
     }
 
-    @Override
-    protected void onPostExecute(String s) {
-        button.setEnabled(true);
-        super.onPostExecute(s);
-    }
+
 
     @Override
     protected String doInBackground(Object... voids) {
         try {
+
+            switch (num){
+                case 0:
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    Log.i("ConnToDB",
+                            "registration - записываем в базу временный пароль");
+                    Log.i("ConnToDB",
+                            "Временный пароль: " + password);
+                    StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
+                    String encryptedPassword = passwordEncryptor.encryptPassword(password);
+                    try {
+                        input = SERVER_NAME
+                                + "/gosteeRecoveryPassword.php?action=temporaryPassword&login="
+                                + URLEncoder.encode(login, "UTF-8")
+                                + "&encryptedPassword="
+                                + URLEncoder.encode(encryptedPassword, "UTF-8")
+                                + "&password="
+                                + URLEncoder.encode(password, "UTF-8");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+            }
+
 
 
             Log.i("ConnectDB",
@@ -89,5 +134,14 @@ public class ConnectDB extends AsyncTask<Object, Object, String>
         }
         return ansver;
 
+    }
+
+    @SuppressLint("SetTextI18n")
+    @Override
+    protected void onPostExecute(String s) {
+        Log.i("ConnectDB","Unblock");
+        //button.setText("Unblock");
+        button.setEnabled(true);
+        super.onPostExecute(s);
     }
 }
