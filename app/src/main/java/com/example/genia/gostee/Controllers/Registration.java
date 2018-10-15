@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,6 +14,7 @@ import android.view.View.OnClickListener;
 import android.support.v7.widget.Toolbar;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.genia.gostee.R;
@@ -39,6 +42,7 @@ public class Registration extends AppCompatActivity {
     String contact = "", password = "", passwordRepeat = "", name = "", ansver = "";
     String encryptedPassword = "";
     RegisteNewUser registeNewUser;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +62,7 @@ public class Registration extends AppCompatActivity {
         password = "";
         passwordRepeat = "";
         name = "";
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
 
         OnClickListener onClickListener = new OnClickListener() {
@@ -67,7 +72,15 @@ public class Registration extends AppCompatActivity {
               switch (view.getId()){
 
                   case R.id.btnReg:
-                      registration();
+
+                      new Thread(new Runnable() {
+                          @Override public void run() {
+                              workWithGui(0);
+                              registration();
+                                  workWithGui(1);
+                              }
+                          }).start();
+
                       break;
               }
             }
@@ -83,30 +96,22 @@ public class Registration extends AppCompatActivity {
         passwordRepeat = edPasswordRepeat.getText().toString();
         name = edName.getText().toString();
         if (contact.isEmpty() || password.isEmpty() || name.isEmpty()){
-
-            Toast.makeText(getApplicationContext(),
-                    "Заполните все поля", Toast.LENGTH_SHORT)
-                    .show();
+            workWithGui(2);
             return;
         }
         if (!isEmailValid(contact) && !isPhoneNumberValid(contact)){
-            Toast.makeText(getApplicationContext(),
-                    "Введите корректный email или номер телефона", Toast.LENGTH_LONG)
-                    .show();
+            workWithGui(3);
             return;
         }
         if (password.length() <6){
-            Toast.makeText(getApplicationContext(),
-                    "Пароль должен содержать не меньше шести символов", Toast.LENGTH_LONG)
-                    .show();
+            workWithGui(4);
             return;
         }
         if (!password.equals(passwordRepeat)){
-            Toast.makeText(getApplicationContext(),
-                    "Введенные вами пароли не совпадают.", Toast.LENGTH_LONG)
-                    .show();
+            workWithGui(5);
             return;
         }
+
         StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
         encryptedPassword = passwordEncryptor.encryptPassword(password);
         registeNewUser = new RegisteNewUser();
@@ -117,6 +122,46 @@ public class Registration extends AppCompatActivity {
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
+    }
+
+    private void workWithGui(final int x){
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override public void run() {
+                switch (x){
+                    case 0:
+                        progressBar.setVisibility(View.VISIBLE);
+                        btnReg.setEnabled(false);
+                        btnReg.setText("Reg");
+                        break;
+                    case 1:
+                        progressBar.setVisibility(View.INVISIBLE);
+                        btnReg.setEnabled(true);
+                        btnReg.setText("RegFin");
+                        break;
+                    case 2:
+                        Toast.makeText(getApplicationContext(),
+                                "Заполните все поля", Toast.LENGTH_SHORT)
+                                .show();
+                        break;
+                    case 3:
+                        Toast.makeText(getApplicationContext(),
+                                "Введите корректный email или номер телефона", Toast.LENGTH_LONG)
+                                .show();
+                        break;
+                    case 4:
+                        Toast.makeText(getApplicationContext(),
+                                "Пароль должен содержать не меньше шести символов", Toast.LENGTH_LONG)
+                                .show();
+                        break;
+                    case 5:
+                        Toast.makeText(getApplicationContext(),
+                                "Введенные вами пароли не совпадают.", Toast.LENGTH_LONG)
+                                .show();
+                        break;
+
+                }
+            }
+        });
     }
 
 
@@ -168,16 +213,14 @@ public class Registration extends AppCompatActivity {
         String SERVER_NAME = "http://r2551241.beget.tech";
         String input = "";
 
-        @SuppressLint("SetTextI18n")
-        @Override
-        protected void onPreExecute() {
-            Log.i("SendRecoveryPassword","Block");
-            btnReg.setEnabled(false);
-            super.onPreExecute();
-        }
-
         @Override
         protected Void doInBackground(Void... voids) {
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             try {
                 try {
                     input = SERVER_NAME
@@ -238,14 +281,6 @@ public class Registration extends AppCompatActivity {
             }
 
             return null;
-        }
-
-        @SuppressLint("SetTextI18n")
-        @Override
-        protected void onPostExecute(Void sVoid) {
-            Log.i("SendRecoveryPassword","Unblock");
-            btnReg.setEnabled(true);
-            super.onPostExecute(sVoid);
         }
 
     }
