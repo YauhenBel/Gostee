@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.RequiresApi;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -43,6 +44,7 @@ public class Registration extends AppCompatActivity {
     String encryptedPassword = "";
     RegisteNewUser registeNewUser;
     ProgressBar progressBar;
+    ConstraintLayout constraintLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,7 @@ public class Registration extends AppCompatActivity {
         passwordRepeat = "";
         name = "";
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        constraintLayout = (ConstraintLayout) findViewById(R.id.regProcecc);
 
 
         OnClickListener onClickListener = new OnClickListener() {
@@ -75,9 +78,9 @@ public class Registration extends AppCompatActivity {
 
                       new Thread(new Runnable() {
                           @Override public void run() {
-                              workWithGui(0);
+
                               registration();
-                                  workWithGui(1);
+                              workWithGui(1);
                               }
                           }).start();
 
@@ -112,6 +115,7 @@ public class Registration extends AppCompatActivity {
             return;
         }
 
+        workWithGui(0);
         StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
         encryptedPassword = passwordEncryptor.encryptPassword(password);
         registeNewUser = new RegisteNewUser();
@@ -129,14 +133,16 @@ public class Registration extends AppCompatActivity {
             @Override public void run() {
                 switch (x){
                     case 0:
-                        progressBar.setVisibility(View.VISIBLE);
+                        constraintLayout.setVisibility(View.VISIBLE);
+                        //progressBar.setVisibility(View.VISIBLE);
                         btnReg.setEnabled(false);
-                        btnReg.setText("Reg");
+                        //btnReg.setText("Reg");
                         break;
                     case 1:
-                        progressBar.setVisibility(View.INVISIBLE);
+                        constraintLayout.setVisibility(View.INVISIBLE);
+                        //progressBar.setVisibility(View.INVISIBLE);
                         btnReg.setEnabled(true);
-                        btnReg.setText("RegFin");
+                        //btnReg.setText("RegFin");
                         break;
                     case 2:
                         Toast.makeText(getApplicationContext(),
@@ -215,12 +221,6 @@ public class Registration extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
             try {
                 try {
                     input = SERVER_NAME

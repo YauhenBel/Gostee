@@ -3,6 +3,9 @@ package com.example.genia.gostee.Controllers;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     TextView tvRegistration, tvRecovery;
     String ansver = "", input = "", editLogin = "";
     ConnectToAuthorization connectToAuthorization;
+    ConstraintLayout constraintLayout;
 
     @SuppressLint("CommitPrefEdits")
     @Override
@@ -45,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         etPassword = (EditText) findViewById(R.id.etPassword);
         tvRegistration = (TextView) findViewById(R.id.tvRegistarton);
         tvRecovery = (TextView) findViewById(R.id.tvRecovery);
+        constraintLayout = (ConstraintLayout) findViewById(R.id.inputProcecc);
 
 
         OnClickListener onClickListener = new OnClickListener() {
@@ -52,7 +57,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 switch (view.getId()){
                     case R.id.btnLogIn:
-                        userLogIn();
+                        new Thread(new Runnable() {
+                            @Override public void run() {
+                                userLogIn();
+                                workWithGui(1);
+                            }
+                        }).start();
+
                         break;
                     case R.id.tvRegistarton:
                         goToRegistration();
@@ -69,6 +80,39 @@ public class MainActivity extends AppCompatActivity {
         tvRecovery.setOnClickListener(onClickListener);
     }
 
+    private void workWithGui(final int x){
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override public void run() {
+                switch (x){
+                    case 0:
+                        constraintLayout.setVisibility(View.VISIBLE);
+                        //progressBar.setVisibility(View.VISIBLE);
+                        btnLogIn.setEnabled(false);
+                        //btnReg.setText("Reg");
+                        break;
+                    case 1:
+                        constraintLayout.setVisibility(View.INVISIBLE);
+                        //progressBar.setVisibility(View.INVISIBLE);
+                        btnLogIn.setEnabled(true);
+                        //btnReg.setText("RegFin");
+                        break;
+                    case 2:
+                        Log.i("Registration", "Пароли не совпадают.");
+                        Toast.makeText(getApplicationContext(),
+                                "Неправильный логин или пароль", Toast.LENGTH_SHORT)
+                                .show();
+                        break;
+                    case 3:
+                        Toast.makeText(getApplicationContext(),
+                                "Заполните все поля.", Toast.LENGTH_SHORT)
+                                .show();
+                        break;
+
+                }
+            }
+        });
+    }
+
     @SuppressLint("ResourceAsColor")
     private void userLogIn() {
         Log.i("MainActivity", "Authorization");
@@ -77,12 +121,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (editLogin.isEmpty() || editPassword.isEmpty()) {
             Log.i("MainActivity", "Authorization2");
-            Toast.makeText(getApplicationContext(),
-                    "Заполните все поля.", Toast.LENGTH_SHORT)
-                    .show();
+            workWithGui(3);
             return;
         }
-
+        workWithGui(0);
         Log.i("MainActivity", "Authorization1");
         connectToAuthorization = new ConnectToAuthorization();
         connectToAuthorization.execute();
@@ -113,20 +155,12 @@ public class MainActivity extends AppCompatActivity {
                         goToCreateNewPassword(idNode.asText());
                     }
                 }else{
-                    Log.i("Registration", "Пароли не совпадают.");
-                    Toast.makeText(getApplicationContext(),
-                            "Неправильный логин или пароль", Toast.LENGTH_SHORT)
-                            .show();
+                   workWithGui(2);
                 }
 
             }
             catch (Exception e) {
-                Toast.makeText(getApplicationContext(),
-                        "Неправильный логин или пароль", Toast.LENGTH_SHORT)
-                        .show();
-                Log.i("ConnToDB",
-                        "+ ConnToDB ---------- server response error:\n"
-                                + e.getMessage());
+                workWithGui(2);
             }
         }
     }
