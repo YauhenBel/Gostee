@@ -6,8 +6,8 @@ android {
         applicationId "com.example.genia.gostee"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 8
-        versionName "1.4"
+        versionCode 11
+        versionName "1.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

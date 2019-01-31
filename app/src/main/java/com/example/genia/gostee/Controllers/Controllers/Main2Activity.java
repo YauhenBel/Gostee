@@ -1,5 +1,6 @@
-package com.example.genia.gostee.Controllers;
+package com.example.genia.gostee.Controllers.Controllers;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,5 +17,10 @@ public class Main2Activity extends AppCompatActivity {
 
     public void goBack(View view) {
         finish();
+    }
+
+    public void addNewCard(View view){
+        Intent intent = new Intent(this, AddCard.class);
+        startActivity(intent);
     }
 }

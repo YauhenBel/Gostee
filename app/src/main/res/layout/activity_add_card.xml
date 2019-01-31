@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
-    tools:context=".Controllers.Controllers.Main2Activity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Controllers.Controllers.AddCard">
 
     <include
         android:id="@+id/include2"
-        layout="@layout/bar_for_main2_layout"
+        layout="@layout/app_bar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
+
 
     <TextView
         android:id="@+id/textView"
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:gravity="center_horizontal"
-        android:text="Авторизация прошла успешно"
+        android:text="Добавление новой карты"
         android:textColor="@color/colorOrange"
         android:textSize="36sp"
         android:textStyle="bold"

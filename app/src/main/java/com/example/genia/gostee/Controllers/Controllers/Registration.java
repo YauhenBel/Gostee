@@ -1,7 +1,5 @@
-package com.example.genia.gostee.Controllers;
+package com.example.genia.gostee.Controllers.Controllers;
 
-import android.annotation.SuppressLint;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.genia.gostee.Controllers.ConnToDB.ConnDB;
 import com.example.genia.gostee.R;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
@@ -25,26 +24,22 @@ import com.google.i18n.phonenumbers.Phonenumber;
 
 import org.jasypt.util.password.StrongPasswordEncryptor;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLEncoder;
-import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public class Registration extends AppCompatActivity {
-    Button btnReg;
-    EditText edContact, edPassword, edPasswordRepeat,  edName;
-    String contact = "", password = "", passwordRepeat = "", name = "", ansver = "";
-    String encryptedPassword = "";
-    RegisteNewUser registeNewUser;
-    ProgressBar progressBar;
-    ConstraintLayout constraintLayout;
+    private Button btnReg;
+    private EditText edContact, edPassword, edPasswordRepeat,  edName;
+    private String contact = "", password = "", passwordRepeat = "", name = "", ansver = "";
+    private String encryptedPassword = "";
+    private ProgressBar progressBar;
+    private ConstraintLayout constraintLayout;
+    private String SERVER_NAME = "http://r2551241.beget.tech";
+    private String input = "";
+    private ConnDB connDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +61,7 @@ public class Registration extends AppCompatActivity {
         name = "";
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         constraintLayout = (ConstraintLayout) findViewById(R.id.regProcecc);
+
 
 
         OnClickListener onClickListener = new OnClickListener() {
@@ -118,14 +114,21 @@ public class Registration extends AppCompatActivity {
         workWithGui(0);
         StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
         encryptedPassword = passwordEncryptor.encryptPassword(password);
-        registeNewUser = new RegisteNewUser();
-        registeNewUser.execute();
         try {
-            registeNewUser.get();
-            finish();
-        } catch (InterruptedException | ExecutionException e) {
+            input = SERVER_NAME
+                    + "/gostee.php?action=reg&login="
+                    + URLEncoder.encode(contact, "UTF-8")
+                    +"&password="
+                    +URLEncoder.encode(encryptedPassword, "UTF-8")
+                    +"&name="
+                    +URLEncoder.encode(name, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+
+        connDB = new ConnDB();
+        connDB.sendRequest(input);
+        finish();
     }
 
     private void workWithGui(final int x){
@@ -134,15 +137,11 @@ public class Registration extends AppCompatActivity {
                 switch (x){
                     case 0:
                         constraintLayout.setVisibility(View.VISIBLE);
-                        //progressBar.setVisibility(View.VISIBLE);
                         btnReg.setEnabled(false);
-                        //btnReg.setText("Reg");
                         break;
                     case 1:
                         constraintLayout.setVisibility(View.INVISIBLE);
-                        //progressBar.setVisibility(View.INVISIBLE);
                         btnReg.setEnabled(true);
-                        //btnReg.setText("RegFin");
                         break;
                     case 2:
                         Toast.makeText(getApplicationContext(),
@@ -210,78 +209,5 @@ public class Registration extends AppCompatActivity {
 
     public void goBack(View view) {
         finish();
-    }
-
-    @SuppressLint("StaticFieldLeak")
-    public class RegisteNewUser extends AsyncTask<Void, Void, Void>
-    {
-        HttpURLConnection conn;
-        String SERVER_NAME = "http://r2551241.beget.tech";
-        String input = "";
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            try {
-                try {
-                    input = SERVER_NAME
-                            + "/gostee.php?action=reg&login="
-                            + URLEncoder.encode(contact, "UTF-8")
-                            +"&password="
-                            +URLEncoder.encode(encryptedPassword, "UTF-8")
-                            +"&name="
-                            +URLEncoder.encode(name, "UTF-8");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-
-                Log.i("SendRecoveryPassword",
-                        "+ ChatActivity - send request on the server "
-                                + input);
-                URL url = new URL(input);
-                conn = (HttpURLConnection) url.openConnection();
-                conn.setReadTimeout(10000);
-                conn.setConnectTimeout(15000);
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("User-Agent", "Mozilla/5.0");
-                conn.setDoInput(true);
-                conn.connect();
-                Integer res = conn.getResponseCode();
-                Log.i("SendRecoveryPassword", "+ MainActivity - answer from server (200 = ОК): "
-                        + res.toString());
-
-            } catch (Exception e) {
-                Log.i("SendRecoveryPassword",
-                        "+ MainActivity - answer from server ERROR: "
-                                + e.getMessage());
-            }
-            try {
-                InputStream is = conn.getInputStream();
-                BufferedReader br = new BufferedReader(
-                        new InputStreamReader(is, "UTF-8"));
-                StringBuilder sb = new StringBuilder();
-                String bfr_st = null;
-                while ((bfr_st = br.readLine()) != null) {
-                    sb.append(bfr_st);
-                }
-                Log.i("SendRecoveryPassword", "+ FoneService - Full answer from server: "
-                        + sb.toString());
-                ansver = sb.toString();
-                ansver = ansver.substring(ansver.indexOf("["), ansver.indexOf("]") + 1);
-
-                Log.i("SendRecoveryPassword", "+ FoneService answer: " + ansver);
-
-                is.close();
-                br.close();
-            }
-            catch (Exception e) {
-                Log.i("SendRecoveryPassword", "+ FoneService error: " + e.getMessage());
-            }
-            finally {
-                conn.disconnect();
-            }
-
-            return null;
-        }
-
     }
 }

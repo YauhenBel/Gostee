@@ -1,8 +1,7 @@
-package com.example.genia.gostee.Controllers;
+package com.example.genia.gostee.Controllers.Controllers;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.constraint.ConstraintLayout;
@@ -16,28 +15,24 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.genia.gostee.Controllers.ConnToDB.ConnDB;
 import com.example.genia.gostee.R;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.jasypt.util.password.StrongPasswordEncryptor;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLEncoder;
-import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
-    Button btnLogIn;
-    EditText etLogin, etPassword;
-    TextView tvRegistration, tvRecovery;
-    String ansver = "", input = "", editLogin = "";
-    ConnectToAuthorization connectToAuthorization;
-    ConstraintLayout constraintLayout;
+    private Button btnLogIn;
+    private EditText etLogin, etPassword;
+    private TextView tvRegistration, tvRecovery;
+    private String ansver = "", input = "", editLogin = "";
+    private ConstraintLayout constraintLayout;
+    private String SERVER_NAME = "http://r2551241.beget.tech";
+    private ConnDB connDB;
 
     @SuppressLint("CommitPrefEdits")
     @Override
@@ -63,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
                                 workWithGui(1);
                             }
                         }).start();
-
                         break;
                     case R.id.tvRegistarton:
                         goToRegistration();
@@ -86,15 +80,11 @@ public class MainActivity extends AppCompatActivity {
                 switch (x){
                     case 0:
                         constraintLayout.setVisibility(View.VISIBLE);
-                        //progressBar.setVisibility(View.VISIBLE);
                         btnLogIn.setEnabled(false);
-                        //btnReg.setText("Reg");
                         break;
                     case 1:
                         constraintLayout.setVisibility(View.INVISIBLE);
-                        //progressBar.setVisibility(View.INVISIBLE);
                         btnLogIn.setEnabled(true);
-                        //btnReg.setText("RegFin");
                         break;
                     case 2:
                         Log.i("Registration", "Пароли не совпадают.");
@@ -126,13 +116,16 @@ public class MainActivity extends AppCompatActivity {
         }
         workWithGui(0);
         Log.i("MainActivity", "Authorization1");
-        connectToAuthorization = new ConnectToAuthorization();
-        connectToAuthorization.execute();
+
         try {
-            connectToAuthorization.get();
-        } catch (InterruptedException | ExecutionException e1) {
-            e1.printStackTrace();
+            input = SERVER_NAME
+                    + "/gostee.php?action=getUserInformation&login="
+                    + URLEncoder.encode(editLogin, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
+        connDB = new ConnDB();
+        ansver = connDB.sendRequest(input);
 
         if (ansver != null && !ansver.isEmpty()) {
             Log.i("ConnDB", "+ Connect ---------- reply contains JSON:" + ansver);
@@ -185,89 +178,5 @@ public class MainActivity extends AppCompatActivity {
     private void goToRegistration(){
         Intent intent = new Intent(this, Registration.class);
         startActivity(intent);
-    }
-
-    @SuppressLint("StaticFieldLeak")
-    public class ConnectToAuthorization extends AsyncTask<Void, Void, Void>
-    {
-        HttpURLConnection conn;
-        String SERVER_NAME = "http://r2551241.beget.tech";
-
-
-        @SuppressLint("SetTextI18n")
-        @Override
-        protected void onPreExecute() {
-            Log.i("SendRecoveryPassword","Block");
-            btnLogIn.setEnabled(false);
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            try {
-                try {
-                    input = SERVER_NAME
-                            + "/gostee.php?action=getUserInformation&login="
-                            + URLEncoder.encode(editLogin, "UTF-8");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-
-                Log.i("SendRecoveryPassword",
-                        "+ ChatActivity - send request on the server "
-                                + input);
-                URL url = new URL(input);
-                conn = (HttpURLConnection) url.openConnection();
-                conn.setReadTimeout(10000);
-                conn.setConnectTimeout(15000);
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("User-Agent", "Mozilla/5.0");
-                conn.setDoInput(true);
-                conn.connect();
-                Integer res = conn.getResponseCode();
-                Log.i("SendRecoveryPassword", "+ MainActivity - answer from server (200 = ОК): "
-                        + res.toString());
-
-            } catch (Exception e) {
-                Log.i("SendRecoveryPassword",
-                        "+ MainActivity - answer from server ERROR: "
-                                + e.getMessage());
-            }
-            try {
-                InputStream is = conn.getInputStream();
-                BufferedReader br = new BufferedReader(
-                        new InputStreamReader(is, "UTF-8"));
-                StringBuilder sb = new StringBuilder();
-                String bfr_st = null;
-                while ((bfr_st = br.readLine()) != null) {
-                    sb.append(bfr_st);
-                }
-                Log.i("SendRecoveryPassword", " - Full answer from server: "
-                        + sb.toString());
-                ansver = sb.toString();
-                ansver = ansver.substring(ansver.indexOf("[") + 1, ansver.indexOf("]"));
-                Log.i("SendRecoveryPassword", " - answer: " + ansver);
-
-                is.close();
-                br.close();
-            }
-            catch (Exception e) {
-                Log.i("SendRecoveryPassword", " - error: " + e.getMessage());
-            }
-            finally {
-                conn.disconnect();
-            }
-
-            return null;
-        }
-
-        @SuppressLint("SetTextI18n")
-        @Override
-        protected void onPostExecute(Void sVoid) {
-            Log.i("SendRecoveryPassword","Unblock");
-            btnLogIn.setEnabled(true);
-            super.onPostExecute(sVoid);
-        }
-
     }
 }
