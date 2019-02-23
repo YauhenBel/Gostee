@@ -150,6 +150,8 @@ public class NewPassword extends AppCompatActivity {
 
     private void goToMainWorkScreen(){
         Intent intent = new Intent(this, Main2Activity.class);
+        intent.putExtra("userId", bundle.getString("id"));
+        intent.putExtra("userName", bundle.getString("userName"));
         startActivity(intent);
     }
 }

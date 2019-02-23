@@ -40,8 +40,14 @@
             tools:ignore="InnerclassSeparator" />
         <activity
             android:name=".Controllers.Controllers.NewPassword"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
-        <activity android:name=".Controllers.Controllers.AddCard"></activity>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
+            tools:ignore="InnerclassSeparator" />
+        <activity
+            android:name=".Controllers.Controllers.AddCard"
+            tools:ignore="InnerclassSeparator" />
+        <activity
+            android:name=".Controllers.Controllers.CreateQRCode"
+            tools:ignore="InnerclassSeparator" />
     </application>
 
 </manifest>

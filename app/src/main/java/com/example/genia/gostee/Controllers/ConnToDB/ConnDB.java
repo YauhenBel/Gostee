@@ -16,8 +16,8 @@ public class ConnDB {
     public String sendRequest(String input){
         try {
 
-            Log.i("SendRecoveryPassword",
-                    "+ ChatActivity - send request on the server "
+            Log.i("ConnDB",
+                    "sendRequest: Send request on the server "
                             + input);
             URL url = new URL(input);
             conn = (HttpURLConnection) url.openConnection();
@@ -28,13 +28,14 @@ public class ConnDB {
             conn.setDoInput(true);
             conn.connect();
             Integer res = conn.getResponseCode();
-            Log.i("SendRecoveryPassword", "+ MainActivity - answer from server (200 = ОК): "
+            Log.i("ConnDB", "sendRequest: Answer from server (200 = ОК): "
                     + res.toString());
 
         } catch (Exception e) {
-            Log.i("SendRecoveryPassword",
-                    "+ MainActivity - answer from server ERROR: "
+            Log.i("ConnDB",
+                    "sendRequest: Answer from server ERROR: "
                             + e.getMessage());
+            e.printStackTrace();
         }
         try {
             InputStream is = conn.getInputStream();
@@ -45,18 +46,18 @@ public class ConnDB {
             while ((bfr_st = br.readLine()) != null) {
                 sb.append(bfr_st);
             }
-            Log.i("SendRecoveryPassword", "+ FoneService - Full answer from server: "
+            Log.i("ConnDB", "sendRequest: Full answer from server: "
                     + sb.toString());
             ansver = sb.toString();
             ansver = ansver.substring(ansver.indexOf("[") + 1, ansver.indexOf("]"));
 
-            Log.i("SendRecoveryPassword", "+ FoneService answer: " + ansver);
+            Log.i("ConnDB", "sendRequest: Answer: " + ansver);
 
             is.close();
             br.close();
         }
         catch (Exception e) {
-            Log.i("SendRecoveryPassword", "+ FoneService error: " + e.getMessage());
+            Log.i("sendRequest", "sendRequest: Error: " + e.getMessage());
         }
         finally {
             conn.disconnect();

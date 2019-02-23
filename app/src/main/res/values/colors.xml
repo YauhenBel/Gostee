@@ -7,4 +7,6 @@
     <color name="colorBedOrange">#ab6445</color>
     <color name="gray">#cdcdcd</color>
     <color name="gray_1">#ecebf1</color>
+    <color name="gray_50">#FAFAFA</color>
+    <color name="gray_300">#E0E0E0</color>
 </resources>

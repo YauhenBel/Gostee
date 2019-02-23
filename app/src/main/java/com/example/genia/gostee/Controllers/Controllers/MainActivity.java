@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private ConstraintLayout constraintLayout;
     private String SERVER_NAME = "http://r2551241.beget.tech";
     private ConnDB connDB;
+    private String mUserID = "", userName = null;
 
     @SuppressLint("CommitPrefEdits")
     @Override
@@ -135,6 +136,9 @@ public class MainActivity extends AppCompatActivity {
                 JsonNode jsonNode = objectMapper.readTree(ansver);
 
                 JsonNode idNode = jsonNode.path("id");
+                mUserID = idNode.asText();
+                JsonNode nameNode = jsonNode.path("name");
+                userName = nameNode.asText();
                 JsonNode passwordNode = jsonNode.path("password");
                 JsonNode statusNode = jsonNode.path("statusRecovery");
 
@@ -145,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
                     if (statusNode.asText().equals("0")) {
                         goToMainWorkScreen();
                     }else {
-                        goToCreateNewPassword(idNode.asText());
+                        goToCreateNewPassword(idNode.asText(), nameNode.asText());
                     }
                 }else{
                    workWithGui(2);
@@ -161,12 +165,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void goToMainWorkScreen(){
         Intent intent = new Intent(this, Main2Activity.class);
+        intent.putExtra("userId", mUserID);
+        intent.putExtra("userName", userName);
+        Log.i("MainActivity", "userId = " + mUserID);
+
         startActivity(intent);
     }
 
-    private void goToCreateNewPassword(String id){
+    private void goToCreateNewPassword(String id, String userName){
         Intent intent = new Intent(this, NewPassword.class);
         intent.putExtra("id", id);
+        intent.putExtra("userName", userName);
         startActivity(intent);
     }
 

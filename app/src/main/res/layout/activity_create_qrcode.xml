@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Controllers.Controllers.AddCard">
+    tools:context=".Controllers.Controllers.CreateQRCode">
 
     <include
         android:id="@+id/include2"
@@ -14,15 +14,18 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
 
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerAddCards"
+    <ImageView
+        android:id="@+id/imvQRCode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/include2"
-        tools:ignore="MissingConstraints" />
+        app:srcCompat="?attr/actionBarDivider" />
 
 </android.support.constraint.ConstraintLayout>
