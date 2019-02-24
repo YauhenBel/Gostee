@@ -2,6 +2,8 @@ package com.example.genia.gostee.Controllers.Controllers;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.constraint.ConstraintLayout;
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private String SERVER_NAME = "http://r2551241.beget.tech";
     private ConnDB connDB;
     private String mUserID = "", userName = null;
+    SharedPreferences sharedPreferences;
 
     @SuppressLint("CommitPrefEdits")
     @Override
@@ -142,6 +145,12 @@ public class MainActivity extends AppCompatActivity {
                 JsonNode passwordNode = jsonNode.path("password");
                 JsonNode statusNode = jsonNode.path("statusRecovery");
 
+                sharedPreferences = getSharedPreferences("info", MODE_PRIVATE);
+                Editor editor = sharedPreferences.edit();
+                editor.putString("userId", mUserID);
+                editor.putString("userName", userName);
+                editor.apply();
+
                 StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
                 if (passwordEncryptor.checkPassword(editPassword, passwordNode.asText())){
                     Log.i("Registration", "Пароли совпадают.");
@@ -165,17 +174,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void goToMainWorkScreen(){
         Intent intent = new Intent(this, Main2Activity.class);
-        intent.putExtra("userId", mUserID);
-        intent.putExtra("userName", userName);
-        Log.i("MainActivity", "userId = " + mUserID);
-
         startActivity(intent);
     }
 
     private void goToCreateNewPassword(String id, String userName){
         Intent intent = new Intent(this, NewPassword.class);
-        intent.putExtra("id", id);
-        intent.putExtra("userName", userName);
+        //intent.putExtra("id", id);
+        //intent.putExtra("userName", userName);
         startActivity(intent);
     }
 

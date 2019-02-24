@@ -16,130 +16,146 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
 
-    <ScrollView
-        android:id="@+id/scrollView5"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayoutCards"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginBottom="45dp"
         android:layout_marginTop="56dp"
-        app:layout_constraintBottom_toTopOf="@+id/button"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/include2"
         tools:layout_editor_absoluteX="0dp">
 
-        <LinearLayout
+        <ScrollView
+            android:id="@+id/scrollView5"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="0dp">
 
-            <android.support.constraint.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:ignore="MissingConstraints"
-                tools:layout_editor_absoluteY="5dp">
-
-                <TextView
-                    android:id="@+id/tvName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="50dp"
-                    android:layout_marginTop="8dp"
-                    android:text="TextView"
-                    android:textColor="@color/colorOrange"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/pageIndicatorView" />
-
-                <com.rd.PageIndicatorView
-                    android:id="@+id/pageIndicatorView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/recyclerView"
-                    app:piv_animationType="scale"
-                    app:piv_dynamicCount="true"
-                    app:piv_interactiveAnimation="true"
-                    app:piv_selectedColor="@color/gray_50"
-                    app:piv_unselectedColor="@color/gray_300"
-                    app:piv_viewPager="@id/recyclerView"
-                    attrs:piv_padding="12dp"
-                    attrs:piv_radius="8dp" />
-
-                <TextView
-                    android:id="@+id/tvTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="5dp"
-                    android:text="TextView"
-                    android:textColor="@color/colorOrange"
-                    app:layout_constraintStart_toEndOf="@+id/imageView2"
-                    app:layout_constraintTop_toBottomOf="@+id/tvName" />
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="185dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    tools:ignore="MissingConstraints"
-                    tools:layout_editor_absoluteY="8dp" />
-
-                <TextView
-                    android:id="@+id/tvDescription"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="50dp"
-                    android:layout_marginTop="8dp"
-                    android:text="TextView"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvTime" />
-
-                <ImageView
-                    android:id="@+id/imageView2"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_marginStart="50dp"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvName"
-                    attrs:srcCompat="@drawable/clock" />
-            </android.support.constraint.ConstraintLayout>
-
-            <com.example.genia.gostee.Controllers.Views.ExpandableHeightGridView
-                android:id="@+id/spotsView"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="8dp"
-                android:horizontalSpacing="10dp"
-                android:isScrollContainer="false"
-                android:numColumns="3"
-                android:stretchMode="columnWidth"
-                android:verticalSpacing="10dp"
-                app:layout_constraintTop_toBottomOf="@+id/scrollView5" />
+                android:orientation="vertical">
 
-        </LinearLayout>
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:ignore="MissingConstraints"
+                    tools:layout_editor_absoluteY="5dp">
+
+                    <TextView
+                        android:id="@+id/tvName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginTop="8dp"
+                        android:text="TextView"
+                        android:textColor="@color/colorOrange"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/pageIndicatorView" />
+
+                    <com.rd.PageIndicatorView
+                        android:id="@+id/pageIndicatorView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/recyclerView"
+                        app:piv_animationType="scale"
+                        app:piv_dynamicCount="true"
+                        app:piv_interactiveAnimation="true"
+                        app:piv_selectedColor="@color/gray_50"
+                        app:piv_unselectedColor="@color/gray_300"
+                        app:piv_viewPager="@id/recyclerView"
+                        attrs:piv_padding="12dp"
+                        attrs:piv_radius="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="5dp"
+                        android:text="TextView"
+                        android:textColor="@color/colorOrange"
+                        app:layout_constraintStart_toEndOf="@+id/imageView2"
+                        app:layout_constraintTop_toBottomOf="@+id/tvName" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recyclerView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="185dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        tools:ignore="MissingConstraints"
+                        tools:layout_editor_absoluteY="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvDescription"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginTop="8dp"
+                        android:text="TextView"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvTime" />
+
+                    <ImageView
+                        android:id="@+id/imageView2"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvName"
+                        attrs:srcCompat="@drawable/clock" />
+                </android.support.constraint.ConstraintLayout>
+
+                <com.example.genia.gostee.Controllers.Views.ExpandableHeightGridView
+                    android:id="@+id/spotsView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="8dp"
+                    android:horizontalSpacing="10dp"
+                    android:isScrollContainer="false"
+                    android:numColumns="3"
+                    android:stretchMode="columnWidth"
+                    android:verticalSpacing="10dp"
+                    app:layout_constraintTop_toBottomOf="@+id/scrollView5" />
+
+            </LinearLayout>
 
 
-    </ScrollView>
+        </ScrollView>
+    </android.support.constraint.ConstraintLayout>
 
-
-    <ImageView
-        android:id="@+id/imageView3"
+    <TextView
+        android:id="@+id/tvNoneCards"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="570dp"
-        app:layout_constraintTop_toTopOf="@+id/scrollView5"
-        app:srcCompat="@drawable/white_circle_one"
-        tools:layout_editor_absoluteX="0dp"
-        tools:ignore="MissingConstraints" />
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/button"
+        app:layout_constraintEnd_toEndOf="@+id/constraintLayoutCards"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <Button
         android:id="@+id/button"

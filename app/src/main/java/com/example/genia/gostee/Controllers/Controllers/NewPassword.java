@@ -1,6 +1,7 @@
 package com.example.genia.gostee.Controllers.Controllers;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.constraint.ConstraintLayout;
@@ -22,7 +23,6 @@ import java.net.URLEncoder;
 
 public class NewPassword extends AppCompatActivity {
 
-    private Bundle bundle;
     private EditText edNewPassword, edCheckNewPassword;
     private Button btnSaveNewPassword;
     private String password, check;
@@ -32,6 +32,7 @@ public class NewPassword extends AppCompatActivity {
     private String SERVER_NAME = "http://r2551241.beget.tech";
     private String input = "";
     private ConnDB connDB;
+    private SharedPreferences preferences;
 
 
 
@@ -40,8 +41,10 @@ public class NewPassword extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_password);
 
-        bundle = getIntent().getExtras();
-        Log.i("NewPassword", "Номер пользователя: " + bundle.getString("id"));
+        preferences = getSharedPreferences("info", MODE_PRIVATE);
+
+        //bundle = getIntent().getExtras();
+        Log.i("NewPassword", "Номер пользователя: " + preferences.getString("userId", ""));
 
         edNewPassword = (EditText) findViewById(R.id.edNewPassword);
         edCheckNewPassword = (EditText) findViewById(R.id.edCheckNewPassword);
@@ -129,7 +132,7 @@ public class NewPassword extends AppCompatActivity {
         try {
             input = SERVER_NAME
                     + "/gosteeRecoveryPassword.php?action=newPassword&id="
-                    + URLEncoder.encode(bundle.getString("id"), "UTF-8")
+                    + URLEncoder.encode(preferences.getString("userId", ""), "UTF-8")
                     +"&password="
                     +URLEncoder.encode(encryptedPassword, "UTF-8");
         } catch (UnsupportedEncodingException e) {
@@ -150,8 +153,8 @@ public class NewPassword extends AppCompatActivity {
 
     private void goToMainWorkScreen(){
         Intent intent = new Intent(this, Main2Activity.class);
-        intent.putExtra("userId", bundle.getString("id"));
-        intent.putExtra("userName", bundle.getString("userName"));
+        //intent.putExtra("userId", bundle.getString("id"));
+        //intent.putExtra("userName", bundle.getString("userName"));
         startActivity(intent);
     }
 }

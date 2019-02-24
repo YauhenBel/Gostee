@@ -2,12 +2,16 @@ package com.example.genia.gostee.Controllers.Controllers;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ScrollView;
+import android.widget.Scroller;
 import android.widget.TextView;
 
 import com.example.genia.gostee.Controllers.Adapters.CardsAdapter;
@@ -28,7 +32,6 @@ import java.util.List;
 
 public class Main2Activity extends AppCompatActivity {
 
-    private Bundle bundle;
     private String idCard = "";
     private String mUserId = "";
     private String ansver = "", input = "";
@@ -38,6 +41,9 @@ public class Main2Activity extends AppCompatActivity {
     private TextView tvDescription;
     private TextView tvName;
     private TextView tvTime;
+    private ConstraintLayout constraintLayout;
+    private TextView tvNoneCards;
+    private SharedPreferences preferences;
     PageIndicatorView pageIndicatorView;
     //GridView gvCircle;
     ArrayList<Integer> images;
@@ -55,16 +61,20 @@ public class Main2Activity extends AppCompatActivity {
 
         //gvCircle = (GridView) findViewById(R.id.gvCircle);
 
-        TextView tvUserName = (TextView) findViewById(R.id.tvUserName);
+        preferences = getSharedPreferences("info",MODE_PRIVATE);
+        String id = preferences.getString("userId", "");
+        Log.i("preferences", id + " preferences");
 
+        TextView tvUserName = (TextView) findViewById(R.id.tvUserName);
+        mGridView = (ExpandableHeightGridView) findViewById(R.id.spotsView);
+        mGridView.setExpanded(true);
         listAdapters =  new ArrayList<>();
         pageIndicatorView =  findViewById(R.id.pageIndicatorView);
         tvName = findViewById(R.id.tvName);
         tvTime = findViewById(R.id.tvTime);
         tvDescription = findViewById(R.id.tvDescription);
-        bundle = getIntent().getExtras();
-        mUserId = bundle.getString("userId");
-        tvUserName.setText(bundle.getString("userName"));
+        mUserId =preferences.getString("userId", "");;
+        tvUserName.setText(preferences.getString("userName", ""));
         Log.i("Main2Activity", "userId = " + mUserId);
 
 
@@ -83,17 +93,30 @@ public class Main2Activity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        initRecyclerView();
-        createImageViewList();
+        if (ansver != null) {
+            initRecyclerView();
+            createImageViewList();
+            mGridView.setAdapter(listAdapters.get(0));
+        }else {
+            Log.i("Main2Activity: onCreate", "Answer = null: ");
+            constraintLayout = (ConstraintLayout)
+                    findViewById(R.id.constraintLayoutCards);
+            constraintLayout.setVisibility(View.INVISIBLE);
+            tvNoneCards = (TextView) findViewById(R.id.tvNoneCards);
+            tvNoneCards.setText("У вас еще нет карточек.");
+            tvNoneCards.setVisibility(View.VISIBLE);
 
 
+
+
+
+        }
 
         //gvCircle.setAdapter(gridAdapter);
 
-        mGridView = (ExpandableHeightGridView) findViewById(R.id.spotsView);
-        mGridView.setExpanded(true);
 
-        mGridView.setAdapter(listAdapters.get(0));
+
+
     }
 
     private void initRecyclerView(){
@@ -149,9 +172,15 @@ public class Main2Activity extends AppCompatActivity {
             e.printStackTrace();
         }
         connDB = new ConnDB();
-        ansver = "[" +connDB.sendRequest(input) + "]";
+
+
+        ansver = connDB.sendRequest(input);
+        if (ansver.equals("null")) ansver = null;
+
 
         if (ansver != null && !ansver.isEmpty()) {
+            ansver = "[" + ansver + "]";
+
             Log.i("getUserCards", "+ Connect ---------- reply contains JSON:" + ansver);
 
                 Log.i("getUserCards", " - answer: " + ansver);
@@ -175,6 +204,8 @@ public class Main2Activity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }else {
+            Log.i("getUserCards", "answer = null");
         }
     }
 
@@ -185,6 +216,7 @@ public class Main2Activity extends AppCompatActivity {
     public void addNewCard(View view){
         Intent intent = new Intent(this, AddCard.class);
         startActivity(intent);
+        finish();
     }
 
     public void createQRCode(View view) {
