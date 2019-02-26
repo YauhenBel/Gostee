@@ -1,5 +1,6 @@
 package com.example.genia.gostee.Controllers.Controllers;
 
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,15 +26,19 @@ public class AddCard extends AppCompatActivity {
     RecyclerAddAdapter recyclerAdapter;
     ArrayList<String> arrayList;
 
-    private String ansver = "", input = "";
+    private String ansver = "", input = "", idsCards = null;
     private String SERVER_NAME = "http://r2551241.beget.tech";
     private ConnDB connDB;
     private List<Card> cards;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_card);
+
+        preferences = getSharedPreferences("info", MODE_PRIVATE);
+        idsCards = preferences.getString("idsCards", "");
 
         Thread thread = new Thread(new MyClass());
         thread.start();
@@ -43,7 +48,7 @@ public class AddCard extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        recyclerAdapter = new RecyclerAddAdapter(cards, this);
+        recyclerAdapter = new RecyclerAddAdapter(cards, this, preferences.getString("userId", ""), idsCards);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerAddCards);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -86,5 +91,9 @@ public class AddCard extends AppCompatActivity {
         }
     }
 
-    public void goBack(View view){finish();}
+    public void goBack(View view){
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("statusADD", recyclerAdapter.getStatus());
+        editor.apply();
+        finish();}
 }

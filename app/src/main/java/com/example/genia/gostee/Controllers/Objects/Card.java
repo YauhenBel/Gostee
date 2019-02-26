@@ -2,6 +2,7 @@ package com.example.genia.gostee.Controllers.Objects;
 
 public class Card {
     private String
+            idMark = null,
             card_id = null,
             description = null,
             working_hours = null,
@@ -86,5 +87,13 @@ public class Card {
 
     public void setCircle_number(Integer circle_number) {
         this.circle_number = circle_number;
+    }
+
+    public String getIdMark() {
+        return idMark;
+    }
+
+    public void setIdMark(String idMark) {
+        this.idMark = idMark;
     }
 }

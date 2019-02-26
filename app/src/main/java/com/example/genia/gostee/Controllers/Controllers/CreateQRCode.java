@@ -1,5 +1,6 @@
 package com.example.genia.gostee.Controllers.Controllers;
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
@@ -22,16 +23,19 @@ public class CreateQRCode extends AppCompatActivity {
     QRGEncoder qrgEncoder;
     ImageView imvQRCode;
     String mUserId = null;
-    Bundle bundle = null;
+    //Bundle bundle = null;
     Bitmap bitmap;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        preferences = getSharedPreferences("info", MODE_PRIVATE);
+        mUserId = preferences.getString("userId", "");
         setContentView(R.layout.activity_create_qrcode);
         imvQRCode = (ImageView) findViewById(R.id.imvQRCode);
-        bundle = getIntent().getExtras();
-        mUserId = bundle.getString("idUser");
+        //bundle = getIntent().getExtras();
+        //mUserId = bundle.getString("idUser");
         WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
         Display display = manager.getDefaultDisplay();
         Point point = new Point();

@@ -149,6 +149,8 @@ public class MainActivity extends AppCompatActivity {
                 Editor editor = sharedPreferences.edit();
                 editor.putString("userId", mUserID);
                 editor.putString("userName", userName);
+                editor.putBoolean("statusADD", false);
+                editor.putString("idsCards", "");
                 editor.apply();
 
                 StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();

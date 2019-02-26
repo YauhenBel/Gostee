@@ -3,6 +3,7 @@ package com.example.genia.gostee.Controllers.Controllers;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,12 +11,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.Scroller;
 import android.widget.TextView;
 
 import com.example.genia.gostee.Controllers.Adapters.CardsAdapter;
 import com.example.genia.gostee.Controllers.Adapters.GridAdapter;
+import com.example.genia.gostee.Controllers.Adapters.RecyclerAddAdapter;
 import com.example.genia.gostee.Controllers.ConnToDB.ConnDB;
 import com.example.genia.gostee.Controllers.Objects.Card;
 import com.example.genia.gostee.Controllers.Views.ExpandableHeightGridView;
@@ -37,21 +40,22 @@ public class Main2Activity extends AppCompatActivity {
     private String ansver = "", input = "";
     private String SERVER_NAME = "http://r2551241.beget.tech";
     private ConnDB connDB;
-    private List<Card> cards;
+    private List<Card> cards = null;
     private TextView tvDescription;
     private TextView tvName;
     private TextView tvTime;
     private ConstraintLayout constraintLayout;
     private TextView tvNoneCards;
     private SharedPreferences preferences;
+    private RecyclerView recyclerView;
     PageIndicatorView pageIndicatorView;
     //GridView gvCircle;
     ArrayList<Integer> images;
     GridAdapter gridAdapter;
     ExpandableHeightGridView mGridView;
     ArrayList<GridAdapter> listAdapters;
-
-
+    private CardsAdapter cardsAdapter;
+    private Button createQR;
 
 
     @Override
@@ -73,9 +77,13 @@ public class Main2Activity extends AppCompatActivity {
         tvName = findViewById(R.id.tvName);
         tvTime = findViewById(R.id.tvTime);
         tvDescription = findViewById(R.id.tvDescription);
-        mUserId =preferences.getString("userId", "");;
+        mUserId = preferences.getString("userId", "");;
         tvUserName.setText(preferences.getString("userName", ""));
         Log.i("Main2Activity", "userId = " + mUserId);
+        constraintLayout = (ConstraintLayout)
+                findViewById(R.id.constraintLayoutCards);
+        tvNoneCards = (TextView) findViewById(R.id.tvNoneCards);
+        createQR = (Button)findViewById(R.id.btnCreateQR);
 
 
         /*new Thread(new Runnable() {
@@ -99,23 +107,59 @@ public class Main2Activity extends AppCompatActivity {
             mGridView.setAdapter(listAdapters.get(0));
         }else {
             Log.i("Main2Activity: onCreate", "Answer = null: ");
-            constraintLayout = (ConstraintLayout)
-                    findViewById(R.id.constraintLayoutCards);
             constraintLayout.setVisibility(View.INVISIBLE);
-            tvNoneCards = (TextView) findViewById(R.id.tvNoneCards);
+            createQR.setVisibility(View.INVISIBLE);
             tvNoneCards.setText("У вас еще нет карточек.");
             tvNoneCards.setVisibility(View.VISIBLE);
-
-
-
-
-
         }
 
-        //gvCircle.setAdapter(gridAdapter);
+    }
 
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        Log.i("onPostResume", "onPostResume");
+        Log.i("statusADD", preferences.getBoolean("statusADD", false) + "");
 
+        if (preferences.getBoolean("statusADD", false) && cards == null){
+            Thread thread = new Thread(new MyClass());
+            thread.start();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
+            if (ansver != null) {
+                initRecyclerView();
+                createImageViewList();
+                mGridView.setAdapter(listAdapters.get(0));
+
+                constraintLayout.setVisibility(View.VISIBLE);
+                createQR.setVisibility(View.VISIBLE);
+
+                tvNoneCards.setVisibility(View.INVISIBLE);
+            }else {
+                Log.i("Main2Activity: onCreate", "Answer = null: ");
+
+            }
+            return;
+        }
+
+        if (preferences.getBoolean("statusADD", false)){
+            Thread thread = new Thread(new GetNewCard());
+            thread.start();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            cardsAdapter = new CardsAdapter(this, cards);
+            recyclerView.setAdapter(cardsAdapter);
+            pageIndicatorView.setCount(cardsAdapter.getItemCount());
+            createImageViewList();
+            mGridView.setAdapter(listAdapters.get(0));
+        }
 
     }
 
@@ -124,9 +168,9 @@ public class Main2Activity extends AppCompatActivity {
         LinearLayoutManager layoutManager =  new LinearLayoutManager(
                 this, LinearLayoutManager.HORIZONTAL, false);
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(layoutManager);
-        final CardsAdapter cardsAdapter = new CardsAdapter(this, cards);
+        cardsAdapter = new CardsAdapter(this, cards);
         recyclerView.setAdapter(cardsAdapter);
         pageIndicatorView.setCount(cardsAdapter.getItemCount());
 
@@ -190,6 +234,7 @@ public class Main2Activity extends AppCompatActivity {
                 cards = objectMapper.readValue(ansver, new TypeReference<List<Card>>(){});
 
                 for (Card card:cards) {
+                    Log.i("getUserCards", "Id Mark: " + card.getIdMark());
                     Log.i("getUserCards", "Id карты: " + card.getCard_id());
                     Log.i("getUserCards", "Название заведения: " + card.getName());
                     Log.i("getUserCards", "Время работы: " + card.getWorking_hours());
@@ -216,25 +261,74 @@ public class Main2Activity extends AppCompatActivity {
     public void addNewCard(View view){
         Intent intent = new Intent(this, AddCard.class);
         startActivity(intent);
-        finish();
     }
 
     public void createQRCode(View view) {
-        goToCreateQRCode();
+        Intent intent = new Intent(this, CreateQRCode.class);
+        intent.putExtra("idUser", mUserId);
+        intent.putExtra("idCard", idCard);
+        startActivity(intent);
     }
 
-    private class MyClass implements Runnable{
+    private void getAddedCard(){
+        String lastIdMark = cards.get(cards.size()-1).getIdMark();
+        try {
+            input = SERVER_NAME
+                    + "/gostee.php?action=getAddedCard&idUser="
+                    + URLEncoder.encode(mUserId, "UTF-8") +
+                    "&lastIdMark="
+                    + URLEncoder.encode(lastIdMark, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        connDB = new ConnDB();
 
-        @Override
-        public void run() {
-            getUserCards();
+        ansver = connDB.sendRequest(input);
+        if (ansver.equals("null")) ansver = null;
+
+
+        if (ansver != null && !ansver.isEmpty()) {
+            ansver = "[" + ansver + "]";
+
+            Log.i("getAddedCard", "+ Connect ---------- reply contains JSON:" + ansver);
+
+            Log.i("getAddedCard", " - answer: " + ansver);
+            ObjectMapper objectMapper = new ObjectMapper();
+            //JsonNode jsonNode = null;
+            try {
+                List<Card> cardsBuffer = objectMapper.readValue(ansver, new TypeReference<List<Card>>(){});
+
+                cards.addAll(cardsBuffer);
+
+                for (Card card:cards) {
+                    Log.i("getAddedCard", "Id карты: " + card.getCard_id());
+                    Log.i("getAddedCard", "Название заведения: " + card.getName());
+                    Log.i("getAddedCard", "Время работы: " + card.getWorking_hours());
+                    Log.i("getAddedCard", "Дни работы: " + card.getWorking_days());
+                    Log.i("getAddedCard", "Описание: " + card.getDescription());
+                    Log.i("getAddedCard", "Ссылка на картинку: " + card.getIndividual_icon());
+                    Log.i("getAddedCard", "Тип карты: " + card.getType());
+                    Log.i("getAddedCard", "Количество отметок: " + card.getCount());
+                    Log.i("getAddedCard", "Количество кружочков: " + card.getCircle_number());
+                    Log.i("getAddedCard", "-------------------------------------------------");
+                }
+
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else {
+            Log.i("getUserCards", "answer = null");
         }
     }
 
     private void createImageViewList()    {
         listAdapters.clear();
+        String idsCards = "";
 
         for (Card card:cards) {
+            idsCards += card.getCard_id() + "|";
             images = new ArrayList<>();
 
             //for (int i = 0; i < card.getCircle_number(); i++) images.add(R.drawable.gray_elipse);
@@ -252,12 +346,27 @@ public class Main2Activity extends AppCompatActivity {
             listAdapters.add(new GridAdapter(this, images));
         }
 
+        Editor editor = preferences.edit();
+        editor.putString("idsCards", idsCards);
+        editor.apply();
+
     }
 
-    private void goToCreateQRCode(){
-        Intent intent = new Intent(this, CreateQRCode.class);
-        intent.putExtra("idUser", mUserId);
-        intent.putExtra("idCard", idCard);
-        startActivity(intent);
+    private class MyClass implements Runnable{
+
+        @Override
+        public void run() {
+            getUserCards();
+        }
     }
+
+    private class GetNewCard implements Runnable{
+
+        @Override
+        public void run() {
+            getAddedCard();
+        }
+    }
+
+
 }
