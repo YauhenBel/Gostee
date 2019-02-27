@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.Scroller;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.example.genia.gostee.Controllers.Adapters.CardsAdapter;
@@ -35,7 +36,7 @@ import java.util.List;
 
 public class Main2Activity extends AppCompatActivity {
 
-    private String idCard = "";
+    private Integer idCard = null;
     private String mUserId = "";
     private String ansver = "", input = "";
     private String SERVER_NAME = "http://r2551241.beget.tech";
@@ -56,6 +57,7 @@ public class Main2Activity extends AppCompatActivity {
     ArrayList<GridAdapter> listAdapters;
     private CardsAdapter cardsAdapter;
     private Button createQR;
+
 
 
     @Override
@@ -328,7 +330,7 @@ public class Main2Activity extends AppCompatActivity {
         String idsCards = "";
 
         for (Card card:cards) {
-            idsCards += card.getCard_id() + "|";
+            idsCards += card.getCard_id() + " ";
             images = new ArrayList<>();
 
             //for (int i = 0; i < card.getCircle_number(); i++) images.add(R.drawable.gray_elipse);

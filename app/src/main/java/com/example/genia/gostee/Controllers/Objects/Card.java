@@ -3,7 +3,7 @@ package com.example.genia.gostee.Controllers.Objects;
 public class Card {
     private String
             idMark = null,
-            card_id = null,
+
             description = null,
             working_hours = null,
             working_days = null,
@@ -14,14 +14,15 @@ public class Card {
     private Integer
             circle_number = null,
             type = null,
-            count = null;
+            count = null,
+            card_id = null;
 
 
-    public String getCard_id() {
+    public Integer getCard_id() {
         return card_id;
     }
 
-    public void setCard_id(String card_id) {
+    public void setCard_id(Integer card_id) {
         this.card_id = card_id;
     }
 

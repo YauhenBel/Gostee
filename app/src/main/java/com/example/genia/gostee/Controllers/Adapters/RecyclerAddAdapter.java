@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,29 +27,41 @@ import com.example.genia.gostee.R;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerAddAdapter extends RecyclerView.Adapter<RecyclerAddAdapter.ViewHolder>{
+public class RecyclerAddAdapter extends RecyclerView.Adapter<RecyclerAddAdapter.ViewHolder>
+        implements Filterable
+{
     private List<Card> cardList;
+    private List<Card> cardListFiltered;
     private Context context;
     private ConnDB connDB;
     private String ansver = "", input = "";
     private String SERVER_NAME = "http://r2551241.beget.tech";
-    private String mUserId = null, mIdCard = null;
-    private Boolean status = false;
-    private String[] ids;
+    private String mUserId = null;
+    private Integer mIdCard = null;
+    private Boolean status = false, status1 = false;
+
+    private ArrayList<Integer> ids = new ArrayList<Integer>(){};
     private ImageButton imageButton;
 
     public RecyclerAddAdapter(List<Card> cardList, Context context, String userId, String idsCards) {
         this.cardList = cardList;
+        this.cardListFiltered = cardList;
         this.context = context;
         this.mUserId = userId;
-        this.ids = idsCards.split("|");
+
+        String[] ids = idsCards.split(" ");
+        for (String str: ids) {
+                this.ids.add(Integer.parseInt(str));
+        }
+
     }
 
     @Override
     public int getItemCount() {
-        return cardList.size();
+        return cardListFiltered.size();
     }
 
 
@@ -67,27 +81,38 @@ public class RecyclerAddAdapter extends RecyclerView.Adapter<RecyclerAddAdapter.
     public void onBindViewHolder(@NonNull final RecyclerAddAdapter.ViewHolder holder, final int position) {
 
         Glide.with(context)
-                .load(getUrlWithHeaders(cardList.get(position).getIndividual_icon()))
+                .load(getUrlWithHeaders(cardListFiltered.get(position).getIndividual_icon()))
                 .into(holder.imageView);
 
-        holder.textView.setText(cardList.get(position).getName());
+        holder.textView.setText(cardListFiltered.get(position).getName());
 
-        for (String str:ids) {
-            Log.i("RecyclerAddAdapter","str " + str);
-            if (cardList.get(position).getCard_id().equals(str)){
-                holder.imageButton.setImageResource(R.drawable.greentick);
-                holder.imageButton.setEnabled(false);
+        for (Integer id: ids) {
+            Log.i("RecyclerAddAdapter","str " + id);
+            if (cardListFiltered.get(position).getCard_id() == id){
+                status1 = true;
+                break;
             }
         }
+
+        if (!status1){
+            holder.imageButton.setImageResource(R.drawable.plus_add);
+            holder.imageButton.setEnabled(true);
+        }else {
+            holder.imageButton.setImageResource(R.drawable.greentick);
+            holder.imageButton.setEnabled(false);
+            status1 = false;
+        }
+
+
 
 
 
         holder.imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("RecyclerAddAdapter","onClick" + cardList.get(position).getName());
+                Log.i("RecyclerAddAdapter","onClick" + cardListFiltered.get(position).getName());
                 imageButton  = (ImageButton) view;
-                mIdCard = cardList.get(position).getCard_id();
+                mIdCard = cardListFiltered.get(position).getCard_id();
                 Thread thread = new Thread(new MyClass());
                 thread.start();
                 try {
@@ -114,6 +139,40 @@ public class RecyclerAddAdapter extends RecyclerView.Adapter<RecyclerAddAdapter.
         return status;
     }
 
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String charString = charSequence.toString();
+                if (charString.isEmpty()) {
+                    cardListFiltered = cardList;
+                } else {
+                    List<Card> filteredList = new ArrayList<>();
+                    for (Card row : cardList) {
+
+                        if (row.getName().toLowerCase().contains(charString.toLowerCase())) {
+                            filteredList.add(row);
+                        }
+                    }
+
+                    cardListFiltered = filteredList;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = cardListFiltered;
+                return filterResults;
+
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                cardListFiltered = (ArrayList<Card>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView textView;
@@ -134,7 +193,7 @@ public class RecyclerAddAdapter extends RecyclerView.Adapter<RecyclerAddAdapter.
                     + "/gostee.php?action=addCard&idUser="
                     + URLEncoder.encode(mUserId, "UTF-8")
                     +"&idCard="
-                    + URLEncoder.encode(mIdCard, "UTF-8");
+                    + URLEncoder.encode(String.valueOf(mIdCard), "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

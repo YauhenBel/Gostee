@@ -1,12 +1,23 @@
 package com.example.genia.gostee.Controllers.Controllers;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.SearchView;
+import android.widget.TableRow;
 
 import com.example.genia.gostee.Controllers.Adapters.RecyclerAddAdapter;
 import com.example.genia.gostee.Controllers.ConnToDB.ConnDB;
@@ -31,11 +42,15 @@ public class AddCard extends AppCompatActivity {
     private ConnDB connDB;
     private List<Card> cards;
     private SharedPreferences preferences;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_card);
+
+        SearchOperator();
+
 
         preferences = getSharedPreferences("info", MODE_PRIVATE);
         idsCards = preferences.getString("idsCards", "");
@@ -96,4 +111,30 @@ public class AddCard extends AppCompatActivity {
         editor.putBoolean("statusADD", recyclerAdapter.getStatus());
         editor.apply();
         finish();}
+
+    private void SearchOperator(){
+            SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+            searchView = (SearchView) findViewById(R.id.searchView);
+            searchView.setSearchableInfo(searchManager
+                    .getSearchableInfo(getComponentName()));
+            searchView.setMaxWidth(Integer.MAX_VALUE);
+            searchView.getBackground();
+
+        // отслеживаем изменения текста в поисковом поле
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    // фильтруем recycler view при окончании ввода
+                    recyclerAdapter.getFilter().filter(query);
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String query) {
+                    // фильтруем recycler view при изменении текста
+                    recyclerAdapter.getFilter().filter(query);
+                    return false;
+                }
+            });
+        }
 }
