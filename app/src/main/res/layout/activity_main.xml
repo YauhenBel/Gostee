@@ -4,28 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gosteeBackgroundColor"
+    android:background="#f5f5f5"
     tools:context=".Controllers.Controllers.MainActivity">
 
     <ImageView
         android:id="@+id/imVAddCard"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="136dp"
         android:contentDescription="@string/todo"
         android:scaleType="fitXY"
         app:srcCompat="@drawable/figure" />
 
     <ImageView
         android:id="@+id/logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="114.5dp"
+        android:layout_height="61.8dp"
         android:layout_gravity="center"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
         app:layout_constraintBottom_toTopOf="@+id/scrollView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imVAddCard"
         app:srcCompat="@drawable/logo"
         tools:ignore="ContentDescription" />
 
@@ -36,6 +34,7 @@
         android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imVAddCard"
+        app:layout_constraintVertical_bias="1.0"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="0dp">
 
@@ -43,149 +42,142 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <LinearLayout
-                android:id="@+id/linearLayout2"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toTopOf="@+id/block2"
+                android:textSize="16.8sp"
+                android:textColor="#ff4d00"
+                android:gravity="center_horizontal"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="113.8dp"
+                android:text="@string/textAuthorization"
+                android:textAlignment="center"
+                android:textStyle="normal|bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/textAuthorization"
-                    android:textAlignment="center"
-                    android:textColor="@color/colorOrange"
-                    android:textSize="24sp"
-                    android:textStyle="normal|bold" />
+            <EditText
+                android:id="@+id/etLogin"
+                android:layout_width="244dp"
+                android:layout_height="52dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="23.3dp"
+                android:background="@drawable/back_edittext"
+                android:drawableStart="@drawable/humanicons"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-                <EditText
-                    android:id="@+id/etLogin"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="45dp"
-                    android:layout_marginRight="45dp"
-                    android:layout_marginTop="20dp"
-                    android:backgroundTint="@color/colorOrange"
-                    android:drawableStart="@drawable/humanicons"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:textSize="18sp"
-                    tools:ignore="LabelFor" />
+            <EditText
+                android:id="@+id/etPassword"
+                android:layout_width="244dp"
+                android:layout_height="52dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="7.3dp"
 
-                <EditText
-                    android:id="@+id/etPassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="45dp"
-                    android:layout_marginRight="45dp"
-                    android:layout_marginTop="10dp"
-                    android:backgroundTint="@color/colorOrange"
-                    android:drawableStart="@drawable/password"
-                    android:ems="10"
-                    android:inputType="textPassword"
-                    android:textSize="18sp"
-                    tools:ignore="LabelFor" />
+                android:background="@drawable/back_edittext"
+                android:drawableStart="@drawable/password"
+                android:ems="10"
+                android:inputType="textPassword"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/etLogin" />
 
+            <Button
+                android:id="@+id/btnLogIn"
 
-                <Button
-                    android:id="@+id/btnLogIn"
+                android:layout_width="244dp"
+                android:layout_height="52dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="27.8dp"
+                android:background="@drawable/button_states"
+                android:text="@string/textInput"
+                android:textColor="#efeff9"
+                android:textSize="12.5sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/etPassword" />
 
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="45dp"
-                    android:layout_marginRight="45dp"
-                    android:layout_marginTop="20dp"
-                    android:background="@drawable/button_states"
-                    android:text="@string/textInput"
-                    android:textColor="@android:color/white"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/tvRegistarton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="98.8dp"
+                android:layout_marginTop="20.5dp"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:paddingBottom="60dp"
+                android:text="@string/textReg"
+                android:textColor="#ff4d00"
+                android:textSize="12.5sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnLogIn" />
+
+            <TextView
+                android:id="@+id/tvRecovery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginEnd="98.8dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="20.5dp"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:paddingBottom="60dp"
+                android:text="@string/textRememberPassword"
+                android:textColor="#ff4d00"
+                android:textSize="12.5sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tvRegistarton"
+                app:layout_constraintTop_toBottomOf="@+id/btnLogIn" />
 
             <LinearLayout
-                android:id="@+id/block2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginBottom="35dp"
-                android:layout_marginEnd="45dp"
-                android:layout_marginStart="45dp"
-                android:baselineAligned="false"
-                android:elevation="0dp"
+                android:layout_height="49.8dp"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
-                tools:layout_editor_absoluteX="45dp">
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
 
-                <LinearLayout
+                <ImageButton
+                    android:id="@+id/imageButton2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="5dp"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:background="#dcdcdc"
+                    android:contentDescription="@string/todo1"
+                    app:srcCompat="@drawable/google"
+                    tools:ignore="NestedWeights"
+                    tools:layout_editor_absoluteX="241dp"
+                    tools:layout_editor_absoluteY="569dp" />
 
-                    <ImageButton
-                        android:id="@+id/imageButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/any_buttons"
-                        app:srcCompat="@drawable/vk"
-                        tools:ignore="ContentDescription,NestedWeights" />
-
-                    <TextView
-                        android:id="@+id/tvRegistarton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="15dp"
-                        android:layout_weight="1"
-                        android:text="@string/textReg"
-                        android:textColor="@color/colorOrange"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
+                <ImageButton
+                    android:id="@+id/imageButton"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_gravity="bottom"
-                    android:layout_marginStart="5dp"
                     android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <ImageButton
-                        android:id="@+id/imageButton2"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/any_buttons"
-                        android:contentDescription="@string/todo1"
-                        app:srcCompat="@drawable/google"
-                        tools:ignore="NestedWeights" />
-
-                    <TextView
-                        android:id="@+id/tvRecovery"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="15dp"
-                        android:layout_weight="1"
-                        android:text="@string/textRememberPassword"
-                        android:textColor="@color/colorOrange"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
+                    android:background="#dcdcdc"
+                    app:srcCompat="@drawable/vk"
+                    tools:ignore="ContentDescription,NestedWeights"
+                    tools:layout_editor_absoluteX="16dp"
+                    tools:layout_editor_absoluteY="582dp" />
             </LinearLayout>
 
 

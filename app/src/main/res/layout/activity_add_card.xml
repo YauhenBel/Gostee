@@ -32,6 +32,7 @@
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         android:focusable="auto"
+        android:queryBackground="@android:color/transparent"
 
         android:iconifiedByDefault="false"
         app:layout_constraintEnd_toEndOf="parent"
