@@ -176,12 +176,14 @@ public class Main2Activity extends AppCompatActivity {
         recyclerView.setAdapter(cardsAdapter);
         pageIndicatorView.setCount(cardsAdapter.getItemCount());
 
+
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
 
             }
+
 
             @SuppressLint("SetTextI18n")
             @Override
@@ -190,6 +192,12 @@ public class Main2Activity extends AppCompatActivity {
                 int x = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
                 //Log.d(TAG, "findFirstCompletelyVisibleItemPosition" + x);
 
+                if (x == cards.size()-2){
+                    recyclerView.scrollToPosition(cards.size()-2);
+                }
+                if (x == cards.size()-cards.size()-1){
+                    recyclerView.scrollToPosition(2);
+                }
 
                 if (x>=0) {
 

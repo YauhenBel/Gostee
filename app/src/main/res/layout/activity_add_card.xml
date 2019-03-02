@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/gosteeBackgroundColor"
     tools:context=".Controllers.Controllers.AddCard">
 
     <include
@@ -19,11 +20,10 @@
         android:id="@+id/recyclerAddCards"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="26dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchView"
+        app:layout_constraintTop_toBottomOf="@+id/textView12"
         tools:ignore="MissingConstraints" />
 
     <SearchView
@@ -32,11 +32,26 @@
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         android:focusable="auto"
-        android:queryBackground="@android:color/transparent"
-
         android:iconifiedByDefault="false"
+
+        android:queryBackground="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/include2" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="243dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="11dp"
+        android:gravity="center_horizontal"
+        android:text="@string/text_to_add_view"
+        android:textColor="#343434"
+        android:textSize="12.5sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchView" />
 
 </android.support.constraint.ConstraintLayout>

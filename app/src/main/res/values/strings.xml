@@ -23,5 +23,9 @@
     после чего вам будет сброшен новый пароль для входа</string>
     <string name="textSendPassword">ОТПРАВИТЬ</string>
     <string name="inputYourLogin">Введите ваш логин:</string>
+    <string name="text_to_add_view">Введите название заведения и выберите нужную Вам карту из списка ниже</string>
+    <string name="your_qr">ВАШ QR КОД</string>
+    <string name="show_qr">Покажите данный QR код кассиру для сканирования и отметке о покупке</string>
+    <string name="vacation">Отмена</string>
 
 </resources>

@@ -17,16 +17,64 @@
 
     <ImageView
         android:id="@+id/imvQRCode"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:srcCompat="?attr/actionBarDivider" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="117dp"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="100dp"
+        android:text="@string/your_qr"
+        android:textColor="#ff4d00"
+        android:textSize="16.8sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include2" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="117dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal"
+        android:text="@string/show_qr"
+        android:textColor="#343434"
+        android:textSize="12.5sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imvQRCode" />
+
+    <Button
+        android:id="@+id/vocation"
+        android:layout_width="244dp"
+        android:layout_height="51.8dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:background="@drawable/button_states"
+        android:text="@string/vacation"
+        android:textColor="#efeff9"
+        android:textSize="12.5sp"
+        android:textStyle="bold"
+        android:onClick="goBack"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include2"
-        app:srcCompat="?attr/actionBarDivider" />
+        app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
 </android.support.constraint.ConstraintLayout>
