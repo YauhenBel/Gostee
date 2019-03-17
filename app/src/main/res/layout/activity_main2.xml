@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/gosteeBackgroundColor"
-    tools:context=".Controllers.Controllers.Main2Activity">
+    tools:context=".Controllers.Main2Activity">
 
     <include
         android:id="@+id/include2"
@@ -49,17 +49,25 @@
                     tools:ignore="MissingConstraints"
                     tools:layout_editor_absoluteY="5dp">
 
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/recyclerView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="185dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="20.8dp"
+                    <FrameLayout
+                        android:id="@+id/frameLayout2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="8dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:ignore="MissingConstraints" />
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/recyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="185dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginEnd="-50dp"
+                            android:layout_marginStart="-50dp"
+                            tools:ignore="MissingConstraints"
+                            tools:layout_editor_absoluteY="21dp" />
+                    </FrameLayout>
 
                     <com.rd.PageIndicatorView
                         android:id="@+id/pageIndicatorView"
@@ -67,10 +75,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
-                        android:layout_marginTop="14.8dp"
+                        android:layout_marginTop="20dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/recyclerView"
+                        app:layout_constraintTop_toBottomOf="@+id/frameLayout2"
                         app:piv_animationType="scale"
                         app:piv_dynamicCount="true"
                         app:piv_interactiveAnimation="true"
@@ -80,7 +88,7 @@
                         attrs:piv_padding="12dp"
                         attrs:piv_radius="8dp" />
 
-                    <com.example.genia.gostee.Controllers.Views.ExpandableHeightGridView
+                    <com.example.genia.gostee.Views.ExpandableHeightGridView
                         android:id="@+id/spotsView"
                         android:layout_width="272dp"
                         android:layout_height="43dp"
@@ -190,7 +198,8 @@
         android:layout_marginTop="390dp"
         app:layout_constraintTop_toTopOf="@+id/constraintLayoutCards"
         attrs:srcCompat="@drawable/white_circle"
-        tools:layout_editor_absoluteX="0dp" />
+        tools:layout_editor_absoluteX="0dp"
+        tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/btnCreateQR"

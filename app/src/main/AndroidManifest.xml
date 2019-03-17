@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
-            android:name=".Controllers.Controllers.MainActivity"
+            android:name=".Controllers.MainActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
             tools:ignore="InnerclassSeparator">
             <intent-filter>
@@ -28,25 +28,25 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Controllers.Controllers.Main2Activity"
+            android:name=".Controllers.Main2Activity"
             tools:ignore="InnerclassSeparator" />
         <activity
-            android:name=".Controllers.Controllers.Registration"
+            android:name=".Controllers.Registration"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
             tools:ignore="InnerclassSeparator" />
         <activity
-            android:name=".Controllers.Controllers.RecoveryPassword"
+            android:name=".Controllers.RecoveryPassword"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
             tools:ignore="InnerclassSeparator" />
         <activity
-            android:name=".Controllers.Controllers.NewPassword"
+            android:name=".Controllers.NewPassword"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
             tools:ignore="InnerclassSeparator" />
         <activity
-            android:name=".Controllers.Controllers.AddCard"
+            android:name=".Controllers.AddCard"
             tools:ignore="InnerclassSeparator" />
         <activity
-            android:name=".Controllers.Controllers.CreateQRCode"
+            android:name=".Controllers.CreateQRCode"
             tools:ignore="InnerclassSeparator" />
     </application>
 

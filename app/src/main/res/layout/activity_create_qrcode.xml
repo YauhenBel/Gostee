@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/gosteeBackgroundColor"
-    tools:context=".Controllers.Controllers.CreateQRCode">
+    tools:context=".Controllers.CreateQRCode">
 
     <include
         android:id="@+id/include2"
