@@ -34,12 +34,8 @@ public class Registration extends AppCompatActivity {
     private Button btnReg;
     private EditText edContact, edPassword, edPasswordRepeat,  edName;
     private String contact = "", password = "", passwordRepeat = "", name = "", ansver = "";
-    private String encryptedPassword = "";
-    private ProgressBar progressBar;
     private ConstraintLayout constraintLayout;
-    private String SERVER_NAME = "http://r2551241.beget.tech";
     private String input = "";
-    private ConnDB connDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +55,7 @@ public class Registration extends AppCompatActivity {
         password = "";
         passwordRepeat = "";
         name = "";
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
         constraintLayout = (ConstraintLayout) findViewById(R.id.regProcecc);
 
 
@@ -113,8 +109,9 @@ public class Registration extends AppCompatActivity {
 
         workWithGui(0);
         StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
-        encryptedPassword = passwordEncryptor.encryptPassword(password);
+        String encryptedPassword = passwordEncryptor.encryptPassword(password);
         try {
+            String SERVER_NAME = "http://r2551241.beget.tech";
             input = SERVER_NAME
                     + "/gostee.php?action=reg&login="
                     + URLEncoder.encode(contact, "UTF-8")
@@ -126,7 +123,7 @@ public class Registration extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        connDB = new ConnDB();
+        ConnDB connDB = new ConnDB();
         connDB.sendRequest(input, this);
         finish();
     }

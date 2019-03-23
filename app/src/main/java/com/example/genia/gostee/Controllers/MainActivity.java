@@ -30,12 +30,8 @@ import java.net.URLEncoder;
 public class MainActivity extends AppCompatActivity {
     private Button btnLogIn;
     private EditText etLogin, etPassword;
-    private TextView tvRegistration, tvRecovery;
-    private String ansver = "", input = "", editLogin = "";
+    private String input = "";
     private ConstraintLayout constraintLayout;
-    private String SERVER_NAME = "http://r2551241.beget.tech";
-    private ConnDB connDB;
-    private String mUserID = "", userName = null;
     SharedPreferences sharedPreferences;
 
     @SuppressLint("CommitPrefEdits")
@@ -46,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
         btnLogIn = (Button) findViewById(R.id.btnLogIn);
         etLogin = (EditText) findViewById(R.id.etLogin);
         etPassword = (EditText) findViewById(R.id.etPassword);
-        tvRegistration = (TextView) findViewById(R.id.tvRegistarton);
-        tvRecovery = (TextView) findViewById(R.id.tvRecovery);
+        TextView tvRegistration = (TextView) findViewById(R.id.tvRegistarton);
+        TextView tvRecovery = (TextView) findViewById(R.id.tvRecovery);
         constraintLayout = (ConstraintLayout) findViewById(R.id.inputProcecc);
 
 
@@ -110,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("ResourceAsColor")
     private void userLogIn() {
         Log.i("MainActivity", "Authorization");
-        editLogin = etLogin.getText().toString();
+        String editLogin = etLogin.getText().toString();
         String editPassword = etPassword.getText().toString();
 
         if (editLogin.isEmpty() || editPassword.isEmpty()) {
@@ -122,14 +118,15 @@ public class MainActivity extends AppCompatActivity {
         Log.i("MainActivity", "Authorization1");
 
         try {
+            String SERVER_NAME = "http://r2551241.beget.tech";
             input = SERVER_NAME
                     + "/gostee.php?action=getUserInformation&login="
                     + URLEncoder.encode(editLogin, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        connDB = new ConnDB();
-        ansver = connDB.sendRequest(input, this);
+        ConnDB connDB = new ConnDB();
+        String ansver = connDB.sendRequest(input, this);
 
         if (ansver != null && !ansver.isEmpty()) {
             Log.i("ConnDB", "+ Connect ---------- reply contains JSON:" + ansver);
@@ -139,9 +136,9 @@ public class MainActivity extends AppCompatActivity {
                 JsonNode jsonNode = objectMapper.readTree(ansver);
 
                 JsonNode idNode = jsonNode.path("id");
-                mUserID = idNode.asText();
+                String mUserID = idNode.asText();
                 JsonNode nameNode = jsonNode.path("name");
-                userName = nameNode.asText();
+                String userName = nameNode.asText();
                 JsonNode passwordNode = jsonNode.path("password");
                 JsonNode statusNode = jsonNode.path("statusRecovery");
 
@@ -155,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
 
                 StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
                 if (passwordEncryptor.checkPassword(editPassword, passwordNode.asText())){
-                    Log.i("Registration", "Пароли совпадают.");
+                    Log.i("MainActivity", "Пароли совпадают.");
 
                     if (statusNode.asText().equals("0")) {
                         goToMainWorkScreen();
