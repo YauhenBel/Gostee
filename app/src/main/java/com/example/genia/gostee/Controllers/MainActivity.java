@@ -147,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
                 editor.putString("userId", mUserID);
                 editor.putString("userName", userName);
                 editor.putBoolean("statusADD", false);
+                editor.putBoolean("statusScan", false);
                 editor.putString("idsCards", "");
                 editor.apply();
 
@@ -178,8 +179,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void goToCreateNewPassword(String id, String userName){
         Intent intent = new Intent(this, NewPassword.class);
-        //intent.putExtra("id", id);
-        //intent.putExtra("userName", userName);
         startActivity(intent);
     }
 

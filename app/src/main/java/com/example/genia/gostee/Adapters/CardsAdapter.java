@@ -3,10 +3,13 @@ package com.example.genia.gostee.Adapters;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -24,10 +27,13 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder>{
     private static final String TAG = "RecyclerViewAdapter";
     private List<Card> cards;
     private Context context;
+    private int width;
 
-    public CardsAdapter(Context context, List<Card> cards){
+    public CardsAdapter(Context context, List<Card> cards, int width){
         this.cards = cards;
         this.context = context;
+        this.width = width;
+
     }
 
     @Override
@@ -38,7 +44,8 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder>{
 
     @Override
     public int getItemViewType(int position) {
-        if (cards.get(position).getIdMark() == null) return 1;
+        if (cards.get(position).getIdMark() == null && position == 0) return 1;
+        if (cards.get(position).getIdMark() == null && position != 0) return 2;
         else return 0;
 
     }
@@ -51,14 +58,56 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder>{
             case 0:
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.layout_listitem, parent, false);
+                //view.setLayoutParams(new RelativeLayout.LayoutParams(getWidth(), getHeight()));
+                //view.setPadding(20,0,  20, 0);
+                Log.i(TAG, "onCreateViewHolder: view.getWidth() = " + view.getLayoutParams().width);
+                Log.i(TAG, "onCreateViewHolder: view.getHeight() = " + view.getLayoutParams().height);
+                view.setLayoutParams(new RelativeLayout.LayoutParams(
+                        (int) (view.getLayoutParams().width * getCipher()),
+                        (int) (view.getLayoutParams().height * getCipher())));
+                view.setPadding((int) (20 * getCipher()), 0, 0, 0);
                 break;
             case 1:
-                view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.list_fake_item, parent, false);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_fake_item, parent, false);
+                view.setLayoutParams(new RelativeLayout.LayoutParams(
+                        (int) (view.getLayoutParams().width * getCipherOne()),
+                        (int) (view.getLayoutParams().height * getCipher())));
+                view.setPadding(0, 0, 0, 0);
+                break;
+            case 2:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_fake_item, parent, false);
+                view.setLayoutParams(new RelativeLayout.LayoutParams(
+                        (int) (view.getLayoutParams().width * getCipherTwo()),
+                        (int) (view.getLayoutParams().height * getCipher())));
+                view.setPadding((int) (20 * getCipher()), 0, 0, 0);
                 break;
         }
         return new ViewHolder(view);
     }
+
+    private double getCipher(){
+        if (width >= 720  && width < 1080) return 1;
+        if (width >= 1080) return 1.2;
+        return 0;
+
+    }
+
+    private double getCipherOne(){
+        if (width >= 720  && width < 1080) return 1.1;
+        if (width >= 1080) return 1.15;
+
+        return 0;
+
+    }
+
+    private double getCipherTwo(){
+        if (width >= 720  && width < 1080) return 1.15;
+        if (width >= 1080) return 1.25;
+
+        return 0;
+
+    }
+
 
 
 

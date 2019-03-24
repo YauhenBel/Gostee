@@ -4,14 +4,17 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Point;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.genia.gostee.Adapters.GridAdapter;
@@ -33,6 +36,7 @@ import java.util.List;
 
 public class Main2Activity extends AppCompatActivity {
 
+    private static final String TAG = "Main2Activity" ;
     private Integer idCard = null;
     private String mUserId = "";
     private String ansver = "", input = "";
@@ -45,7 +49,6 @@ public class Main2Activity extends AppCompatActivity {
     private ConstraintLayout constraintLayout;
     private TextView tvNoneCards;
     private SharedPreferences preferences;
-    private RecyclerView recyclerView;
     PageIndicatorView pageIndicatorView;
     //GridView gvCircle;
     ArrayList<Integer> images;
@@ -54,6 +57,8 @@ public class Main2Activity extends AppCompatActivity {
     ArrayList<GridAdapter> listAdapters;
     private CardsAdapter cardsAdapter;
     private Button createQR;
+    private int width;
+
 
 
 
@@ -61,6 +66,11 @@ public class Main2Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        width = size.x;
 
         //gvCircle = (GridView) findViewById(R.id.gvCircle);
 
@@ -162,6 +172,58 @@ public class Main2Activity extends AppCompatActivity {
             mGridView.setAdapter(listAdapters.get(0));
         }
 
+        if (preferences.getBoolean("statusScan", false)){
+            GetChangeOfCounts getChangeOfCounts = new GetChangeOfCounts();
+            getChangeOfCounts.start();
+            try {
+                getChangeOfCounts.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            initRecyclerView();
+            createImageViewList();
+            mGridView.setAdapter(listAdapters.get(0));
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean("statusScan", false);
+            editor.apply();
+        }
+
+    }
+
+    private class GetChangeOfCounts extends Thread{
+        @Override
+        public void run() {
+            super.run();
+            getChangeOfCounts();
+        }
+    }
+    private void getChangeOfCounts(){
+        SERVER_NAME = "http://r2551241.beget.tech";
+        try {
+            input = SERVER_NAME
+                    + "/gostee.php?action=getChangeOfCounts&idUser="
+                    + URLEncoder.encode(mUserId, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        ConnDB connDB = new ConnDB();
+        String ansver = connDB.sendRequest(input, this);
+        ansver = "[" + ansver + "]";
+        Log.i(TAG, "updateDB: ansver: " +ansver);
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            List<Card> bufferCards = objectMapper.readValue(ansver, new TypeReference<List<Card>>(){});
+            for (Card card: bufferCards) {
+                for (Card card1: cards) {
+                    if (card1.getCard_id() == card.getCard_id()) card1.setCount(card.getCount());
+                }
+
+                Log.i(TAG, "getChangeOfCounts: card: " + card.getCard_id());
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initRecyclerView(){
@@ -172,9 +234,9 @@ public class Main2Activity extends AppCompatActivity {
         CustomLinearLayoutManager layoutManager1 = new CustomLinearLayoutManager(
                 this, LinearLayoutManager.HORIZONTAL, false);
 
-        recyclerView = findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(layoutManager1);
-        cardsAdapter = new CardsAdapter(this, cards);
+        cardsAdapter = new CardsAdapter(this, cards, width);
         Log.i("Main2Activity", "cardsAdapter.getItemCount() = " + cardsAdapter.getItemCount());
         recyclerView.setAdapter(cardsAdapter);
         pageIndicatorView.setCount(cardsAdapter.getItemCount()-2);
@@ -185,18 +247,7 @@ public class Main2Activity extends AppCompatActivity {
         if (cardsAdapter.getItemCount()-2 == 1) layoutManager1.setScrollEnabled(false);
         else layoutManager1.setScrollEnabled(true);
 
-
-
-
-
-
-
         Log.i("Main2Activity", "computeHorizontalScrollOffset = " + recyclerView.computeHorizontalScrollOffset());
-
-
-
-
-
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
@@ -204,8 +255,6 @@ public class Main2Activity extends AppCompatActivity {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-
-
             }
 
             @SuppressLint("SetTextI18n")
@@ -262,7 +311,7 @@ public class Main2Activity extends AppCompatActivity {
                 ObjectMapper objectMapper = new ObjectMapper();
                 //JsonNode jsonNode = null;
             try {
-                List<Card> bufferCards = objectMapper.readValue(ansver, new TypeReference<List<Card>>(){});;
+                List<Card> bufferCards = objectMapper.readValue(ansver, new TypeReference<List<Card>>(){});
                 cards = new ArrayList<>();
                 cards.add(new Card());
                 cards.addAll(bufferCards);

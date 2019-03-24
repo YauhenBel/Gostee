@@ -5,14 +5,19 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.genia.gostee.ConnToDB.ConnDB;
 import com.example.genia.gostee.R;
 import com.google.zxing.WriterException;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
@@ -20,11 +25,12 @@ import androidmads.library.qrgenearator.QRGEncoder;
 
 public class CreateQRCode extends AppCompatActivity {
 
+    private static final String TAG = "CreateQRCode";
     QRGEncoder qrgEncoder;
     ImageView imvQRCode;
     String mUserId = null;
-    //Bundle bundle = null;
     Bitmap bitmap;
+    String input = "";
     private SharedPreferences preferences;
 
     @Override
@@ -51,6 +57,61 @@ public class CreateQRCode extends AppCompatActivity {
             e.printStackTrace();
         }
         imvQRCode.setImageBitmap(bitmap);
+
+        MyThread myThread = new MyThread();
+        myThread.start();
+    }
+
+    private void changeStatusScan(){
+            String SERVER_NAME = "http://r2551241.beget.tech";
+        try {
+            input = SERVER_NAME
+                    + "/gostee.php?action=changeStatusScan&idUser="
+                    + URLEncoder.encode(mUserId, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        ConnDB connDB = new ConnDB();
+        String ansver = connDB.sendRequest(input, this);
+        Log.i(TAG, "updateDB: ansver: " +ansver);
+    }
+
+    private String checkStatusScan(){
+        String SERVER_NAME = "http://r2551241.beget.tech";
+        try {
+            input = SERVER_NAME
+                    + "/gostee.php?action=checkStatusScan&idUser="
+                    + URLEncoder.encode(mUserId, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        ConnDB connDB = new ConnDB();
+        String ansver = connDB.sendRequest(input, this);
+        Log.i(TAG, "updateDB: ansver: " +ansver);
+        return ansver;
+    }
+
+    class MyThread extends Thread{
+        @Override
+        public void run() {
+            super.run();
+            changeStatusScan();
+            for (int i = 0; i<60; i++){
+                if (checkStatusScan().equals("0")) {
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putBoolean("statusScan", true);
+                    editor.apply();
+                    finish();
+                    break;
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
     }
 
     public void goBack(View view){finish();}

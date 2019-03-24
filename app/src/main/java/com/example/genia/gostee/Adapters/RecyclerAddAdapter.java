@@ -26,6 +26,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class RecyclerAddAdapter extends RecyclerView.Adapter<RecyclerAddAdapter.ViewHolder>
         implements Filterable
 {
@@ -41,6 +42,7 @@ public class RecyclerAddAdapter extends RecyclerView.Adapter<RecyclerAddAdapter.
 
     private ArrayList<Integer> ids = new ArrayList<Integer>(){};
     private ImageButton imageButton;
+    private String TAG = "RecyclerAddAdapter";
 
     public RecyclerAddAdapter(List<Card> cardList, Context context, String userId, String idsCards) {
         this.cardList = cardList;
@@ -135,6 +137,7 @@ public class RecyclerAddAdapter extends RecyclerView.Adapter<RecyclerAddAdapter.
     }
 
     private GlideUrl getUrlWithHeaders (String url){
+        Log.i(TAG, "getUrlWithHeaders: url: " + url);
         return new GlideUrl(url, new LazyHeaders.Builder()
                 .addHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0)" +
                         " AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
