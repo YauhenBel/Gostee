@@ -87,14 +87,16 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder>{
 
     private double getCipher(){
         if (width >= 720  && width < 1080) return 1;
-        if (width >= 1080) return 1.2;
+        if (width >= 1080 && width < 1440) return 1;
+        if (width >= 1440) return 1.2;
         return 0;
 
     }
 
     private double getCipherOne(){
         if (width >= 720  && width < 1080) return 1.1;
-        if (width >= 1080) return 1.15;
+        if (width >= 1080 && width < 1440) return 1.1;
+        if (width >= 1440) return 1.15;
 
         return 0;
 
@@ -102,7 +104,8 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder>{
 
     private double getCipherTwo(){
         if (width >= 720  && width < 1080) return 1.15;
-        if (width >= 1080) return 1.25;
+        if (width >= 1080 && width < 1440) return 1.2;
+        if (width >= 1440) return 1.25;
 
         return 0;
 

@@ -30,7 +30,7 @@
         app:layout_constraintTop_toBottomOf="@+id/include2" />
 
     <TextView
-        android:id="@+id/textView12"
+        android:id="@+id/tvAddCardInformation"
         android:layout_width="243dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -55,6 +55,6 @@
         android:paddingTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView12" />
+        app:layout_constraintTop_toBottomOf="@+id/tvAddCardInformation" />
 
 </android.support.constraint.ConstraintLayout>

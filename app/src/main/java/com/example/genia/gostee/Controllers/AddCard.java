@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.example.genia.gostee.Adapters.RecyclerAddAdapter;
 import com.example.genia.gostee.ConnToDB.ConnDB;
@@ -40,6 +41,8 @@ public class AddCard extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_card);
 
+        TextView textView = findViewById(R.id.tvAddCardInformation);
+
         SearchOperator();
 
 
@@ -54,7 +57,7 @@ public class AddCard extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        recyclerAdapter = new RecyclerAddAdapter(cards, this, preferences.getString("userId", ""), idsCards);
+        recyclerAdapter = new RecyclerAddAdapter(cards, this, preferences.getString("userId", ""), idsCards, textView);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerAddCards);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

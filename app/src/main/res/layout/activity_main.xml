@@ -69,6 +69,7 @@
                 android:layout_marginTop="23.3dp"
                 android:background="@drawable/back_edittext"
                 android:drawableStart="@drawable/humanicons"
+                android:drawablePadding="10dp"
                 android:ems="10"
                 android:inputType="textPersonName"
                 android:textSize="18sp"
@@ -84,7 +85,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="7.3dp"
-
+                android:drawablePadding="10dp"
                 android:background="@drawable/back_edittext"
                 android:drawableStart="@drawable/password"
                 android:ems="10"
@@ -112,41 +113,51 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/etPassword" />
 
-            <TextView
-                android:id="@+id/tvRegistarton"
+            <android.support.constraint.ConstraintLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginStart="98.8dp"
-                android:layout_marginTop="20.5dp"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="20dp"
                 android:paddingBottom="60dp"
-                android:text="@string/textReg"
-                android:textColor="#ff4d00"
-                android:textSize="12.5sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btnLogIn" />
-
-            <TextView
-                android:id="@+id/tvRecovery"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginEnd="98.8dp"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="20.5dp"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:paddingBottom="60dp"
-                android:text="@string/textRememberPassword"
-                android:textColor="#ff4d00"
-                android:textSize="12.5sp"
-                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tvRegistarton"
-                app:layout_constraintTop_toBottomOf="@+id/btnLogIn" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnLogIn">
+
+                <TextView
+                    android:id="@+id/tvRecovery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="@string/textRememberPassword"
+                    android:textColor="#ff4d00"
+                    android:textSize="12.5sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/tvRegistarton"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvRegistarton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="@string/textReg"
+                    android:textColor="#ff4d00"
+                    android:textSize="12.5sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </android.support.constraint.ConstraintLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -188,13 +199,10 @@
     <android.support.constraint.ConstraintLayout
 
         android:id="@+id/inputProcecc"
-        android:layout_width="300dp"
-        android:layout_height="150dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/border"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:background="@android:color/white"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -230,6 +238,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+
     </android.support.constraint.ConstraintLayout>
 
 

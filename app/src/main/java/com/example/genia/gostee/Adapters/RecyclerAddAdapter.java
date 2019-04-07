@@ -1,5 +1,6 @@
 package com.example.genia.gostee.Adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -38,17 +39,20 @@ public class RecyclerAddAdapter extends RecyclerView.Adapter<RecyclerAddAdapter.
     private String SERVER_NAME = "http://r2551241.beget.tech";
     private String mUserId = null;
     private Integer mIdCard = null;
-    private Boolean status = false, status1 = false;
+    private Boolean status = false, status1 = false, status2 = false;
 
     private ArrayList<Integer> ids = new ArrayList<Integer>(){};
     private ImageButton imageButton;
     private String TAG = "RecyclerAddAdapter";
+    private TextView textView;
 
-    public RecyclerAddAdapter(List<Card> cardList, Context context, String userId, String idsCards) {
+    public RecyclerAddAdapter(List<Card> cardList, Context context, String userId, String idsCards,
+                              TextView textView) {
         this.cardList = cardList;
         this.cardListFiltered = cardList;
         this.context = context;
         this.mUserId = userId;
+        this.textView = textView;
 
         if (!idsCards.equals("")){
             String[] ids = idsCards.split(" ");
@@ -58,10 +62,19 @@ public class RecyclerAddAdapter extends RecyclerView.Adapter<RecyclerAddAdapter.
         }else this.ids = null;
 
 
+
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public int getItemCount() {
+
+        if (cardListFiltered == null || cardListFiltered.size() == 0){
+            textView.setText("Ни одного заведения не найдено");
+        }else {
+            textView.setText("Введите название заведения и выберите " +
+                    "нужную Вам карту из списка ниже");
+        }
         return cardListFiltered.size();
     }
 
@@ -109,22 +122,13 @@ public class RecyclerAddAdapter extends RecyclerView.Adapter<RecyclerAddAdapter.
 
             if (!status1){
                 holder.imageButton.setImageResource(R.drawable.plus_add);
-                holder.imageButton.setEnabled(true);
             }else {
                 holder.imageButton.setImageResource(R.drawable.greentick);
-                holder.imageButton.setEnabled(false);
                 status1 = false;
             }
         }else {
             holder.imageButton.setImageResource(R.drawable.plus_add);
-            holder.imageButton.setEnabled(true);
         }
-
-
-
-
-
-
 
         holder.imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,9 +144,11 @@ public class RecyclerAddAdapter extends RecyclerView.Adapter<RecyclerAddAdapter.
                     e.printStackTrace();
                 }
                 Log.i("RecyclerAddAdapter","refreshDrawableState");
-                imageButton.setImageResource(R.drawable.greentick);
+                if (ansver.equals("300")) imageButton.setImageResource(R.drawable.greentick);
+                if (ansver.equals("200")) imageButton.setImageResource(R.drawable.plus_add);
+
                 //imageButton.refreshDrawableState();
-                imageButton.setEnabled(false);
+                //imageButton.setEnabled(false);
             }
         });
     }
@@ -162,6 +168,7 @@ public class RecyclerAddAdapter extends RecyclerView.Adapter<RecyclerAddAdapter.
     @Override
     public Filter getFilter() {
         return new Filter() {
+            @SuppressLint("SetTextI18n")
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
                 String charString = charSequence.toString();
@@ -175,6 +182,8 @@ public class RecyclerAddAdapter extends RecyclerView.Adapter<RecyclerAddAdapter.
                             filteredList.add(row);
                         }
                     }
+
+
 
                     cardListFiltered = filteredList;
                 }
@@ -221,8 +230,8 @@ public class RecyclerAddAdapter extends RecyclerView.Adapter<RecyclerAddAdapter.
 
 
         ansver = connDB.sendRequest(input, context);
-        if (ansver.equals("300")) status = true;
-        else ansver = null;
+        status = true;
+
 
 
     }
