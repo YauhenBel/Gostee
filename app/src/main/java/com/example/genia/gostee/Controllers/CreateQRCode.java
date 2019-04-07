@@ -111,6 +111,7 @@ public class CreateQRCode extends AppCompatActivity {
                 }
 
             }
+            finish();
         }
     }
 

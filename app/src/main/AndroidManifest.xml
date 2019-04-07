@@ -12,13 +12,14 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/icon"
+        android:roundIcon="@mipmap/iconround"
         android:label="Gostee"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
             android:name=".Controllers.MainActivity"
+            android:theme="@style/AppTheme.Launcher"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
             tools:ignore="InnerclassSeparator">
             <intent-filter>

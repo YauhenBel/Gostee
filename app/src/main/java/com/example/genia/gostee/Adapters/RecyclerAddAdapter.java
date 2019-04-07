@@ -81,9 +81,20 @@ public class RecyclerAddAdapter extends RecyclerView.Adapter<RecyclerAddAdapter.
     @Override
     public void onBindViewHolder(@NonNull final RecyclerAddAdapter.ViewHolder holder, final int position) {
 
-        Glide.with(context)
+        String icon = cardListFiltered.get(position).getIndividual_icon();
+        if (!icon.isEmpty()){
+            Glide.with(context)
+                    .load(getUrlWithHeaders(icon))
+                    .into(holder.imageView);
+        }else {
+            Glide.with(context)
+                    .load(getUrlWithHeaders("http://r2551241.beget.tech/icons/standartIcon.png"))
+                    .into(holder.imageView);
+        }
+
+        /*Glide.with(context)
                 .load(getUrlWithHeaders(cardListFiltered.get(position).getIndividual_icon()))
-                .into(holder.imageView);
+                .into(holder.imageView);*/
 
         holder.textView.setText(cardListFiltered.get(position).getName());
 

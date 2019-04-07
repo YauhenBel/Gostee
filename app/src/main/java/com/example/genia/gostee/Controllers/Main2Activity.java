@@ -81,6 +81,7 @@ public class Main2Activity extends AppCompatActivity {
         TextView tvUserName = (TextView) findViewById(R.id.tvUserName);
         mGridView = (ExpandableHeightGridView) findViewById(R.id.spotsView);
         mGridView.setExpanded(true);
+        mGridView.setEnabled(false);
         listAdapters =  new ArrayList<>();
         pageIndicatorView =  findViewById(R.id.pageIndicatorView);
         tvName = findViewById(R.id.tvName);

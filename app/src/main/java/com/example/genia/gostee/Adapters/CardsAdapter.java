@@ -114,27 +114,17 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(CardsAdapter.ViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called");
-
-
-        if (cards.get(position).getIdMark() != null){
+        if (cards.get(position).getIdMark() == null) return;
+        String icon = cards.get(position).getIndividual_icon();
+        if (!icon.isEmpty()){
             Glide.with(context)
-                    .load(getUrlWithHeaders(cards.get(position).getIndividual_icon()))
+                    .load(getUrlWithHeaders(icon))
                     .into(holder.image);
-
-            holder.image.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.d(TAG, "onClick: clicked on an image" + cards.get(position).getName());
-                    Toast.makeText(context, cards.get(position).getName(), Toast.LENGTH_SHORT).show();
-
-                }
-            });
-
+        }else {
+            Glide.with(context)
+                    .load(getUrlWithHeaders("http://r2551241.beget.tech/icons/standartIcon.png"))
+                    .into(holder.image);
         }
-
-
-
-
 
     }
 

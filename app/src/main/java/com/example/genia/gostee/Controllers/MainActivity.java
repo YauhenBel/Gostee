@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.Theme_AppCompat_Light_NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         btnLogIn = (Button) findViewById(R.id.btnLogIn);
