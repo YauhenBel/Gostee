@@ -22,9 +22,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
-        android:iconifiedByDefault="false"
         android:focusable="false"
+        android:iconifiedByDefault="false"
         android:queryBackground="@android:color/transparent"
+        android:queryHint="Gostee"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/include2" />
@@ -46,10 +47,10 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerAddCards"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="452dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
         android:paddingBottom="10dp"
         android:paddingTop="10dp"

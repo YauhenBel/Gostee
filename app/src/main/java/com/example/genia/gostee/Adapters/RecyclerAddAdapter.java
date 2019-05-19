@@ -48,6 +48,7 @@ public class RecyclerAddAdapter extends RecyclerView.Adapter<RecyclerAddAdapter.
 
     public RecyclerAddAdapter(List<Card> cardList, Context context, String userId, String idsCards,
                               TextView textView) {
+        Log.i(TAG, "RecyclerAddAdapter: idsCards = " + idsCards);
         this.cardList = cardList;
         this.cardListFiltered = cardList;
         this.context = context;
@@ -123,7 +124,7 @@ public class RecyclerAddAdapter extends RecyclerView.Adapter<RecyclerAddAdapter.
             if (!status1){
                 holder.imageButton.setImageResource(R.drawable.plus_add);
             }else {
-                holder.imageButton.setImageResource(R.drawable.greentick);
+                holder.imageButton.setImageResource(R.drawable.minus_add);
                 status1 = false;
             }
         }else {
@@ -144,7 +145,7 @@ public class RecyclerAddAdapter extends RecyclerView.Adapter<RecyclerAddAdapter.
                     e.printStackTrace();
                 }
                 Log.i("RecyclerAddAdapter","refreshDrawableState");
-                if (ansver.equals("300")) imageButton.setImageResource(R.drawable.greentick);
+                if (ansver.equals("300")) imageButton.setImageResource(R.drawable.minus_add);
                 if (ansver.equals("200")) imageButton.setImageResource(R.drawable.plus_add);
 
                 //imageButton.refreshDrawableState();
@@ -229,7 +230,7 @@ public class RecyclerAddAdapter extends RecyclerView.Adapter<RecyclerAddAdapter.
         connDB = new ConnDB();
 
 
-        ansver = connDB.sendRequest(input, context);
+        ansver = connDB.sendRequest(input, context, 10000);
         status = true;
 
 

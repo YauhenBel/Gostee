@@ -70,7 +70,7 @@ public class AddCard extends AppCompatActivity {
         String SERVER_NAME = "http://r2551241.beget.tech";
         String input = SERVER_NAME + "/gostee.php?action=getCards";
         ConnDB connDB = new ConnDB();
-        String ansver = "[" + connDB.sendRequest(input, this) + "]";
+        String ansver = "[" + connDB.sendRequest(input, this, 10000) + "]";
 
         if (ansver != null && !ansver.isEmpty()) {
             Log.i("ConnDB", "+ Connect ---------- reply contains JSON:" + ansver);

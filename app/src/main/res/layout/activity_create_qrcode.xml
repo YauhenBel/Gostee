@@ -15,17 +15,27 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
 
-    <ImageView
-        android:id="@+id/imvQRCode"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="35dp"
+        app:cardMaxElevation="9dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:srcCompat="?attr/actionBarDivider" />
+        app:layout_constraintTop_toBottomOf="@+id/textView">
+
+        <ImageView
+            android:id="@+id/imvQRCode"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            app:srcCompat="?attr/actionBarDivider"
+            tools:layout_editor_absoluteX="105dp"
+            tools:layout_editor_absoluteY="199dp" />
+    </android.support.v7.widget.CardView>
 
     <TextView
         android:id="@+id/textView"
@@ -56,23 +66,25 @@
         android:textSize="12.5sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imvQRCode" />
+        app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
     <Button
         android:id="@+id/vocation"
         android:layout_width="244dp"
         android:layout_height="51.8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="45dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="40dp"
         android:background="@drawable/button_states"
-        android:onClick="goBack"
+        android:onClick="Cancel"
         android:text="@string/vacation"
         android:textColor="#efeff9"
         android:textSize="12.5sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
 </android.support.constraint.ConstraintLayout>

@@ -168,7 +168,7 @@
                 app:layout_constraintStart_toStartOf="parent">
 
                 <ImageButton
-                    android:id="@+id/imageButton2"
+                    android:id="@+id/regAcrossGoogle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -180,7 +180,7 @@
                     tools:layout_editor_absoluteY="569dp" />
 
                 <ImageButton
-                    android:id="@+id/imageButton"
+                    android:id="@+id/regAcrossVK"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -211,7 +211,7 @@
 
         <ProgressBar
             android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyle"
+            android:theme="@style/ProgressTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"

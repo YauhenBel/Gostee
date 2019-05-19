@@ -9,11 +9,13 @@ import android.os.Looper;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText etLogin, etPassword;
     private String input = "";
     private ConstraintLayout constraintLayout;
+    private String TAG = "MainActivity";
     SharedPreferences sharedPreferences;
 
     @SuppressLint("CommitPrefEdits")
@@ -46,9 +49,12 @@ public class MainActivity extends AppCompatActivity {
         TextView tvRegistration = (TextView) findViewById(R.id.tvRegistarton);
         TextView tvRecovery = (TextView) findViewById(R.id.tvRecovery);
         constraintLayout = (ConstraintLayout) findViewById(R.id.inputProcecc);
+        ImageButton regAcGoogle = findViewById(R.id.regAcrossGoogle);
+        ImageButton regAcVK = findViewById(R.id.regAcrossVK);
 
 
         OnClickListener onClickListener = new OnClickListener() {
+            @SuppressLint("ShowToast")
             @Override
             public void onClick(View view) {
                 switch (view.getId()){
@@ -66,11 +72,21 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.tvRecovery:
                         goToRecovery();
                         break;
+                    case R.id.regAcrossGoogle:
+                        Toast.makeText(getApplicationContext(),
+                                "Регистрация через Google", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.regAcrossVK:
+                        Toast.makeText(getApplicationContext(),
+                                "Регистрация через VK", Toast.LENGTH_SHORT).show();
+                        break;
                 }
             }
         };
 
         btnLogIn.setOnClickListener(onClickListener);
+        regAcGoogle.setOnClickListener(onClickListener);
+        regAcVK.setOnClickListener(onClickListener);
         tvRegistration.setOnClickListener(onClickListener);
         tvRecovery.setOnClickListener(onClickListener);
     }
@@ -107,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("ResourceAsColor")
     private void userLogIn() {
         Log.i("MainActivity", "Authorization");
-        String editLogin = etLogin.getText().toString();
+        String editLogin = etLogin.getText().toString().trim();
         String editPassword = etPassword.getText().toString();
 
         if (editLogin.isEmpty() || editPassword.isEmpty()) {
@@ -127,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         ConnDB connDB = new ConnDB();
-        String ansver = connDB.sendRequest(input, this);
+        String ansver = connDB.sendRequest(input, this, 10000);
 
         if (ansver != null && !ansver.isEmpty()) {
             Log.i("ConnDB", "+ Connect ---------- reply contains JSON:" + ansver);

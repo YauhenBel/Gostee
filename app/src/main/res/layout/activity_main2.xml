@@ -16,162 +16,46 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/constraintLayoutCards"
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/btnCreateQR"
         app:layout_constraintTop_toBottomOf="@+id/include2"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="0dp"
-        android:layout_height="0dp">
+        tools:context=".MainActivity"
+        android:layout_height="0dp"
+        android:id="@+id/constraintLayoutCards">
 
-        <ScrollView
-            android:id="@+id/scrollView5"
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:paddingEnd="@dimen/card_padding"
+            android:paddingLeft="@dimen/card_padding"
+            android:paddingRight="@dimen/card_padding"
+            android:paddingStart="@dimen/card_padding"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.rd.PageIndicatorView
+            android:id="@+id/pageIndicatorView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="250dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="0dp">
+            app:piv_animationType="scale"
+            app:piv_dynamicCount="true"
+            app:piv_interactiveAnimation="true"
+            app:piv_selectedColor="@color/gray_300"
+            app:piv_unselectedColor="@color/gray_50" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <android.support.constraint.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:ignore="MissingConstraints"
-                    tools:layout_editor_absoluteY="5dp">
-
-                    <FrameLayout
-                        android:id="@+id/frameLayout2"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="8dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/recyclerView"
-                            android:layout_width="match_parent"
-                            android:layout_height="200dp"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginEnd="-60dp"
-                            android:layout_marginStart="-60dp"
-                            tools:ignore="MissingConstraints"
-                            tools:layout_editor_absoluteY="21dp" />
-                    </FrameLayout>
-
-                    <com.rd.PageIndicatorView
-                        android:id="@+id/pageIndicatorView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="20dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/frameLayout2"
-                        app:piv_animationType="scale"
-                        app:piv_dynamicCount="true"
-                        app:piv_interactiveAnimation="true"
-                        app:piv_selectedColor="@color/gray_300"
-                        app:piv_unselectedColor="@color/gray_50"
-                        app:piv_viewPager="@id/recyclerView"
-                        attrs:piv_padding="12dp"
-                        attrs:piv_radius="8dp" />
-
-                    <com.example.genia.gostee.Views.ExpandableHeightGridView
-                        android:id="@+id/spotsView"
-                        android:layout_width="272dp"
-                        android:layout_height="43dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="16dp"
-                        android:horizontalSpacing="10dp"
-                        android:isScrollContainer="false"
-                        android:numColumns="3"
-                        android:stretchMode="columnWidth"
-                        android:verticalSpacing="10dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
-
-                    <android.support.constraint.ConstraintLayout
-                        android:id="@+id/constraintLayout2"
-                        android:layout_width="272dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="28dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/pageIndicatorView">
-
-                        <TextView
-                            android:id="@+id/tvName"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="TextView"
-                            android:textColor="@color/colorOrange"
-                            android:textStyle="bold"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="@+id/constraintLayout2" />
-
-                        <LinearLayout
-                            android:id="@+id/linearLayout"
-                            android:layout_width="match_parent"
-                            android:layout_height="20dp"
-                            android:layout_marginTop="23dp"
-                            android:orientation="horizontal"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/tvName">
-
-                            <ImageView
-                                android:id="@+id/imageView2"
-                                android:layout_width="15dp"
-                                android:layout_height="15dp"
-                                android:layout_gravity="center_vertical"
-                                android:layout_weight="0"
-                                attrs:srcCompat="@drawable/clock"
-                                tools:layout_editor_absoluteX="50dp"
-                                tools:layout_editor_absoluteY="281dp" />
-
-                            <TextView
-                                android:id="@+id/tvTime"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:paddingLeft="10dp"
-                                android:text="TextView"
-                                android:textColor="@color/colorOrange"
-                                tools:layout_editor_absoluteX="73dp"
-                                tools:layout_editor_absoluteY="296dp" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/tvDescription"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="23dp"
-                            android:text="TextView"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
-
-                    </android.support.constraint.ConstraintLayout>
-
-                </android.support.constraint.ConstraintLayout>
-
-            </LinearLayout>
-
-
-        </ScrollView>
     </android.support.constraint.ConstraintLayout>
 
     <TextView

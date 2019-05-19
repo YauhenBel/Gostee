@@ -161,7 +161,7 @@ public class RecoveryPassword extends AppCompatActivity {
         }
 
         connDB = new ConnDB();
-        ansver = connDB.sendRequest(input, this);
+        ansver = connDB.sendRequest(input, this, 10000);
 
         Log.i("ConnToDB","createTemporaryPassword4");
 

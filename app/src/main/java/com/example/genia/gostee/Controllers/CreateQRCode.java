@@ -16,6 +16,7 @@ import com.example.genia.gostee.ConnToDB.ConnDB;
 import com.example.genia.gostee.R;
 import com.google.zxing.WriterException;
 
+import java.io.InterruptedIOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -32,6 +33,8 @@ public class CreateQRCode extends AppCompatActivity {
     Bitmap bitmap;
     String input = "";
     private SharedPreferences preferences;
+    private MyThread myThread;
+    private ConnDB connDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +61,9 @@ public class CreateQRCode extends AppCompatActivity {
         }
         imvQRCode.setImageBitmap(bitmap);
 
-        MyThread myThread = new MyThread();
+        myThread = new MyThread();
         myThread.start();
+
     }
 
     private void changeStatusScan(){
@@ -71,8 +75,8 @@ public class CreateQRCode extends AppCompatActivity {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        ConnDB connDB = new ConnDB();
-        String ansver = connDB.sendRequest(input, this);
+        connDB = new ConnDB();
+        String ansver = connDB.sendRequest(input, this, 10000);
         Log.i(TAG, "updateDB: ansver: " +ansver);
     }
 
@@ -85,33 +89,36 @@ public class CreateQRCode extends AppCompatActivity {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        ConnDB connDB = new ConnDB();
-        String ansver = connDB.sendRequest(input, this);
+            connDB = new ConnDB();
+            String ansver = connDB.sendRequest(input, this, 65000);
+
+
         Log.i(TAG, "updateDB: ansver: " +ansver);
         return ansver;
     }
 
-    class MyThread extends Thread{
+    public void Cancel(View view) {
+        if (myThread.isAlive()){
+            connDB.Disconnect();
+            myThread.interrupt();
+        }
+        finish();
+
+    }
+
+    class MyThread extends Thread {
         @Override
         public void run() {
             super.run();
             changeStatusScan();
-            for (int i = 0; i<60; i++){
-                if (checkStatusScan().equals("0")) {
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putBoolean("statusScan", true);
-                    editor.apply();
-                    finish();
-                    break;
-                }
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
+            if (checkStatusScan().equals("0")) {
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean("statusScan", true);
+                editor.apply();
+                finish();
+            } else {
+                finish();
             }
-            finish();
         }
     }
 

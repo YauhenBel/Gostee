@@ -10,7 +10,9 @@ import android.widget.Toast;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.InterruptedIOException;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.UnknownHostException;
 
@@ -18,8 +20,13 @@ public class ConnDB {
 
     private String  ansver  = "";
     private HttpURLConnection conn;
+    private String TAG = "ConnDB";
 
-    public String sendRequest(String input, final Context context){
+    public void Disconnect(){
+        conn.disconnect();
+    }
+
+    public String sendRequest(String input, final Context context, int timeOut){
         try {
 
             Log.i("ConnDB",
@@ -27,7 +34,7 @@ public class ConnDB {
                             + input);
             URL url = new URL(input);
             conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(10000);
+            conn.setReadTimeout(timeOut);
             conn.setConnectTimeout(15000);
             conn.setRequestMethod("POST");
             conn.setRequestProperty("User-Agent", "Mozilla/5.0");
@@ -47,11 +54,25 @@ public class ConnDB {
                             .show();
                 }
             });
+        } catch (SocketTimeoutException e){
+            Log.i("ConnDB",
+                    "Превышено время ожидания ответа");
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override public void run() {
+                    Toast.makeText(context,
+                            "Превышено время ожидания ответа", Toast.LENGTH_SHORT)
+                            .show();
+                }
+            });
         } catch (Exception e ) {
             Log.i("ConnDB",
                     "sendRequest: Answer from server ERROR: "
                             + e.getMessage());
-            e.printStackTrace();
+            if (e instanceof InterruptedIOException) {
+                Log.i(TAG, "sendRequest: Thread was interrupt");
+                Thread.currentThread().interrupt();
+            }
+           e.printStackTrace();
         }
         try {
             InputStream is = conn.getInputStream();
@@ -78,6 +99,8 @@ public class ConnDB {
         finally {
             conn.disconnect();
         }
+
+
 
       return ansver;
     }

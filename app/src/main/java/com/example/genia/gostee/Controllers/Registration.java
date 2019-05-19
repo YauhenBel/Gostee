@@ -124,7 +124,7 @@ public class Registration extends AppCompatActivity {
         }
 
         ConnDB connDB = new ConnDB();
-        ansver = connDB.sendRequest(input, this);
+        ansver = connDB.sendRequest(input, this, 10000);
         if (ansver.equals("1")){
             workWithGui(6);
             return;

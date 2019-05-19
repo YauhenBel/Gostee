@@ -140,7 +140,7 @@ public class NewPassword extends AppCompatActivity {
         }
 
         connDB = new ConnDB();
-        ansver = connDB.sendRequest(input, this);
+        ansver = connDB.sendRequest(input, this, 10000);
 
         if (ansver != null && !ansver.isEmpty()) {
                 Log.i("ConnToDB",
